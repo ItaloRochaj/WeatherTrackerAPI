@@ -50,7 +50,7 @@ O WeatherTrackerAPI implementa autenticação **JWT (JSON Web Token)** para gara
 
 Exemplo de requisição **Login** usando **Bruno API Client**:
 
-![Login via Bruno Client](./9cbc3aa0-2b46-4076-9dde-a85de91aed73.png)
+![Login via Bruno Client](https://github.com/ItaloRochaj/WeatherTrackerAPI/blob/main/assets/Captura%20de%20tela%202025-09-03%20161513.png)
 
 - O usuário envia **e-mail** e **senha**
 - A API retorna um **token JWT**
@@ -772,7 +772,7 @@ Para informações detalhadas sobre estratégias de teste e planejamento futuro,
 
 A documentação completa da API está disponível através do **Swagger UI** quando a aplicação está em execução:
 
-![Swagger UI - WeatherTrackerAPI](./4deb2903-74c6-4551-92d6-5d0b538ec228.png)
+![Swagger UI - WeatherTrackerAPI](https://github.com/ItaloRochaj/WeatherTrackerAPI/blob/main/assets/Captura%20de%20tela%202025-09-03%20161542.png)
 
 - **URL**: `https://localhost:7240`
 - **Swagger JSON**: `https://localhost:7240/swagger/v1/swagger.json`
