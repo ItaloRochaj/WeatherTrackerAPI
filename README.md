@@ -724,22 +724,18 @@ Para deploy em produção, considere:
 4. **Monitoramento** com Application Insights
 5. **Docker** para containerização
 
-## 🤝 Contribuição
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## 📝 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
-## 📞 Contato
-
-- **Desenvolvedor**: Italo Rocha
-- **GitHub**: [@ItaloRochaj](https://github.com/ItaloRochaj)
+### 👨🏻‍💻 Autor:
+<table style="border=0">
+  <tr>
+    <td align="left">
+      <a href="https://github.com/ItaloRochaj">
+        <span><b>Italo Rocha</b></span>
+      </a>
+      <br>
+      <span>Full-Stack Development</span>
+    </td>
+  </tr>
+</table>
 
 ---
 
