@@ -17,38 +17,6 @@ Uma API RESTful desenvolvida em .NET 8 que integra com a NASA API para coletar, 
 - [Testes Unitários](#testes)
 - [Documentação da API](#documentação-da-api)
 
-
-## 📝 Documentação e Testes
-
-### Swagger UI
-A documentação interativa da API está disponível através do Swagger UI nos seguintes endpoints:
-
-- **Desenvolvimento Local:**
-  - http://localhost:5170
-  - https://localhost:7230 (HTTPS)
-
-O Swagger UI fornece:
-- Documentação completa de todos os endpoints
-- Interface interativa para teste das APIs
-- Descrições detalhadas dos schemas e modelos
-- Suporte à autenticação JWT Bearer
-- Exemplos de requisição e resposta
-
-### Teste de Endpoints com Bruno
-O projeto inclui uma coleção de testes de API usando o Bruno, uma ferramenta moderna para teste de APIs REST. A coleção contém:
-
-- Testes para todos os endpoints da API
-- Exemplos de requisições pré-configuradas
-- Ambiente de desenvolvimento configurado
-- Validação de respostas
-- Testes de autenticação e autorização
-
-Para usar o Bruno:
-1. Instale o Bruno através do site oficial: https://www.usebruno.com/
-2. Abra a coleção localizada na pasta raiz do projeto
-3. Configure o ambiente conforme necessário
-4. Execute os testes dos endpoints
-
 ## 🎯 Visão Geral
 O WeatherTrackerAPI é uma aplicação backend desenvolvida como parte de uma avaliação técnica para demonstrar conhecimentos em:
 - **Integração com APIs externas** (NASA API - Astronomy Picture of the Day)
