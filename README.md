@@ -1,6 +1,6 @@
 # WeatherTrackerAPI 🚀
 
-Uma API RESTful desenvolvida em## 🏗️ Arquitetura do Projeto
+## 🏗️ Arquitetura do Projeto
 
 ### Estrutura de Camadas
 
