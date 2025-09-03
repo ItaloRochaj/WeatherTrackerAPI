@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "5ATx9Ui6TMQ=",
+  "dgSpecHash": "hN9cmqXbEnk=",
   "success": true,
-  "projectFilePath": "d:\\GitHub\\WeatherTrackerAPI\\WeatherTrackerAPI.csproj",
+  "projectFilePath": "D:\\GitHub\\WeatherTrackerAPI\\WeatherTrackerAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\italo\\.nuget\\packages\\aspnetcore.healthchecks.sqlserver\\9.0.0\\aspnetcore.healthchecks.sqlserver.9.0.0.nupkg.sha512",
     "C:\\Users\\italo\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",

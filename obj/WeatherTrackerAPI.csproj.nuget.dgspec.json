@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\GitHub\\WeatherTrackerAPI\\WeatherTrackerAPI.csproj": {}
+    "D:\\GitHub\\WeatherTrackerAPI\\WeatherTrackerAPI.csproj": {}
   },
   "projects": {
-    "d:\\GitHub\\WeatherTrackerAPI\\WeatherTrackerAPI.csproj": {
+    "D:\\GitHub\\WeatherTrackerAPI\\WeatherTrackerAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\GitHub\\WeatherTrackerAPI\\WeatherTrackerAPI.csproj",
+        "projectUniqueName": "D:\\GitHub\\WeatherTrackerAPI\\WeatherTrackerAPI.csproj",
         "projectName": "WeatherTrackerAPI",
-        "projectPath": "d:\\GitHub\\WeatherTrackerAPI\\WeatherTrackerAPI.csproj",
+        "projectPath": "D:\\GitHub\\WeatherTrackerAPI\\WeatherTrackerAPI.csproj",
         "packagesPath": "C:\\Users\\italo\\.nuget\\packages\\",
-        "outputPath": "d:\\GitHub\\WeatherTrackerAPI\\obj\\",
+        "outputPath": "D:\\GitHub\\WeatherTrackerAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\italo\\AppData\\Roaming\\NuGet\\NuGet.Config"
