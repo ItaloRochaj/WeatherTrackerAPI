@@ -14,33 +14,24 @@ using FluentValidation.AspNetCore;
 using AutoMapper;
 using WeatherTrackerAPI.Mappings;
 using Serilog;
-using Pomelo.EntityFrameworkCore.MySql;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
 builder.Services.AddControllers();
-
-// Add Memory Cache
 builder.Services.AddMemoryCache();
 
-// Configure Entity Framework
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), 
-        new MySqlServerVersion(new Version(8, 0, 35))));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Configure settings
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.Configure<NasaApiSettings>(builder.Configuration.GetSection("NasaApiSettings"));
 
-// Configure AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
-// Configure FluentValidation
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
-// Configure HTTP Client
 builder.Services.AddHttpClient<INasaService, NasaService>(client =>
 {
     var baseUrl = builder.Configuration["NasaApiSettings:BaseUrl"] ?? "https://api.nasa.gov";
@@ -51,12 +42,9 @@ builder.Services.AddHttpClient<INasaService, NasaService>(client =>
     client.Timeout = TimeSpan.FromSeconds(timeoutInSeconds);
 });
 
-// Register services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IApodRepository, ApodRepository>();
-
-// Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -74,7 +62,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Configure Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -110,24 +97,21 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Configure Health Checks
 builder.Services.AddHealthChecks()
-    .AddMySql(builder.Configuration.GetConnectionString("DefaultConnection")!);
+    .AddSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")!);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Weather Tracker API v1");
-        c.RoutePrefix = string.Empty; // Set Swagger UI at apps root
+        c.RoutePrefix = string.Empty;
     });
 }
 
-// Ensure database is created
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -142,13 +126,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Add JWT middleware - TEMPORARILY DISABLED FOR TESTING
-// app.UseMiddleware<JwtAuthenticationMiddleware>();
-
 app.MapControllers();
 app.MapHealthChecks("/health");
 

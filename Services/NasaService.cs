@@ -56,7 +56,6 @@ namespace WeatherTrackerAPI.Services
                 return cachedApod;
             }
 
-            // First try to get from database
             var storedApod = await _apodRepository.GetByDateAsync(date);
             if (storedApod != null)
             {
@@ -65,15 +64,14 @@ namespace WeatherTrackerAPI.Services
                 return dto;
             }
 
-            // If not in database, fetch from NASA API and store
             return await SyncApodFromNasaAsync(date);
         }
 
         public async Task<ApodDto> GetRandomApodAsync()
         {
             var random = new Random();
-            var startDate = new DateTime(1995, 6, 16); // NASA APOD started on this date
-            var endDate = new DateTime(2024, 8, 29); // Use uma data conhecida válida
+            var startDate = new DateTime(1995, 6, 16);
+            var endDate = new DateTime(2024, 8, 29);
             
             var range = (endDate - startDate).Days;
             var randomDays = random.Next(0, range);
@@ -116,7 +114,6 @@ namespace WeatherTrackerAPI.Services
                     throw new InvalidOperationException("Failed to deserialize NASA API response");
                 }
 
-                // Convert to entity and store in database
                 var apodEntity = new ApodEntity
                 {
                     Date = DateTime.Parse(nasaApod.Date),
@@ -131,7 +128,6 @@ namespace WeatherTrackerAPI.Services
                 var savedApod = await _apodRepository.CreateAsync(apodEntity);
                 var dto = _mapper.Map<ApodDto>(savedApod);
 
-                // Cache the result
                 var cacheKey = $"apod_{date:yyyy-MM-dd}";
                 _cache.Set(cacheKey, dto, TimeSpan.FromHours(1));
 

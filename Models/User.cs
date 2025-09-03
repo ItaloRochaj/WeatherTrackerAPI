@@ -42,7 +42,6 @@ public class User
     [Column(TypeName = "datetime")]
     public DateTime? UpdatedAt { get; set; }
     
-    // Computed property
     [NotMapped]
     public string FullName => $"{FirstName} {LastName}";
 }

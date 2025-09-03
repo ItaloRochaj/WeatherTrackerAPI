@@ -115,12 +115,10 @@ namespace WeatherTrackerAPI.Repositories
 
         public async Task<IEnumerable<ApodTrendDto>> GetTrendsAsync(DateTime startDate, DateTime endDate)
         {
-            // Buscar todos os dados do período e processar no cliente
             var data = await _context.ApodData
                 .Where(a => a.Date >= startDate && a.Date <= endDate)
                 .ToListAsync();
 
-            // Processar no cliente (memória)
             var trends = data
                 .GroupBy(a => new { Year = a.Date.Year, Month = a.Date.Month })
                 .Select(g => new ApodTrendDto

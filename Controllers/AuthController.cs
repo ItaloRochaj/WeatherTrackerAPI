@@ -18,11 +18,6 @@ namespace WeatherTrackerAPI.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        /// Realiza login do usuário
-        /// </summary>
-        /// <param name="loginDto">Dados de login</param>
-        /// <returns>Token JWT e informações do usuário</returns>
         [HttpPost("login")]
         [ProducesResponseType(typeof(LoginResponseDto), 200)]
         [ProducesResponseType(typeof(object), 400)]
@@ -51,11 +46,6 @@ namespace WeatherTrackerAPI.Controllers
             }
         }
 
-        /// <summary>
-        /// Registra um novo usuário
-        /// </summary>
-        /// <param name="registerDto">Dados de registro</param>
-        /// <returns>Informações do usuário criado</returns>
         [HttpPost("register")]
         [ProducesResponseType(typeof(RegisterResponseDto), 201)]
         [ProducesResponseType(typeof(object), 400)]
@@ -84,11 +74,6 @@ namespace WeatherTrackerAPI.Controllers
             }
         }
 
-        /// <summary>
-        /// Valida um token JWT
-        /// </summary>
-        /// <param name="validateTokenDto">Token a ser validado</param>
-        /// <returns>Status da validação</returns>
         [HttpPost("validate")]
         [ProducesResponseType(typeof(ValidateTokenResponseDto), 200)]
         [ProducesResponseType(typeof(object), 400)]
@@ -105,7 +90,6 @@ namespace WeatherTrackerAPI.Controllers
                 
                 if (result)
                 {
-                    // Aqui você pode extrair informações do token se necessário
                     var response = new ValidateTokenResponseDto
                     {
                         IsValid = true,

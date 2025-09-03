@@ -27,7 +27,6 @@ namespace WeatherTrackerAPI.Extensions
                     }
                 });
 
-                // Include XML comments
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 if (File.Exists(xmlPath))
@@ -35,7 +34,6 @@ namespace WeatherTrackerAPI.Extensions
                     c.IncludeXmlComments(xmlPath);
                 }
 
-                // Configure JWT authentication in Swagger
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = @"JWT Authorization header using the Bearer scheme. 
@@ -65,9 +63,6 @@ namespace WeatherTrackerAPI.Extensions
                         new List<string>()
                     }
                 });
-
-                // Configure operation filters for better documentation
-                // c.OperationFilter<AuthorizeCheckOperationFilter>();
             });
 
             return services;
@@ -81,7 +76,7 @@ namespace WeatherTrackerAPI.Extensions
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Weather Tracker API V1");
-                    c.RoutePrefix = string.Empty; // Set Swagger UI at app's root
+                    c.RoutePrefix = string.Empty;
                     c.DisplayRequestDuration();
                     c.EnableDeepLinking();
                     c.EnableFilter();

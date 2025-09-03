@@ -26,7 +26,7 @@ namespace WeatherTrackerAPI.Data
                 entity.Property(e => e.FirstName).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.LastName).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.Role).IsRequired().HasMaxLength(50).HasDefaultValue("User");
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
                 entity.Property(e => e.IsActive).HasDefaultValue(true);
             });
 
@@ -37,12 +37,12 @@ namespace WeatherTrackerAPI.Data
                 entity.HasIndex(e => e.Date).IsUnique();
                 entity.Property(e => e.Date).IsRequired();
                 entity.Property(e => e.Title).IsRequired().HasMaxLength(500);
-                entity.Property(e => e.Explanation).IsRequired().HasColumnType("TEXT");
+                entity.Property(e => e.Explanation).IsRequired().HasColumnType("NVARCHAR(MAX)");
                 entity.Property(e => e.Url).HasMaxLength(2000);
                 entity.Property(e => e.HdUrl).HasMaxLength(2000);
                 entity.Property(e => e.MediaType).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Copyright).HasMaxLength(200);
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
                 entity.Property(e => e.ViewCount).HasDefaultValue(0);
                 entity.Property(e => e.IsFavorited).HasDefaultValue(false);
             });

@@ -8,7 +8,6 @@ namespace WeatherTrackerAPI.Mappings
     {
         public AutoMapperProfile()
         {
-            // User mappings
             CreateMap<User, RegisterResponseDto>();
             CreateMap<RegisterDto, User>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
@@ -18,7 +17,6 @@ namespace WeatherTrackerAPI.Mappings
                 .ForMember(dest => dest.IsActive, opt => opt.Ignore())
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => "User"));
 
-            // APOD mappings
             CreateMap<ApodEntity, ApodDto>();
             CreateMap<ApodDto, ApodEntity>()
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
@@ -33,7 +31,6 @@ namespace WeatherTrackerAPI.Mappings
 
             CreateMap<ApodEntity, ApodSummaryDto>();
 
-            // NASA API Response to Entity mapping
             CreateMap<ApodResponse, ApodEntity>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.Parse(src.Date)))

@@ -35,7 +35,6 @@ namespace WeatherTrackerAPI.Models
 
         public DateTime? UpdatedAt { get; set; }
 
-        // Propriedades para análise de tendências
         public int ViewCount { get; set; } = 0;
         public double? Rating { get; set; }
         public bool IsFavorited { get; set; } = false;
