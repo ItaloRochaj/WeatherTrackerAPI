@@ -1,6 +1,6 @@
 # WeatherTrackerAPI 🚀
 
-Uma API RESTful desenvolvida em## 🏗️ Arquitetura do Projeto
+Uma API RESTful desenvolvida ## 🏗️ Arquitetura do Projeto
 
 ### Estrutura de Camadas
 
@@ -190,39 +190,7 @@ graph LR
     style AR fill:#e8f5e8
     style SQLDB fill:#fff3e0
     style NASAAPI fill:#ffebee
-```egra com a NASA API para coletar, processar e armazenar dados astronômicos, fornecendo endpoints seguros para consulta de informações espaciais históricas e em tempo real.
-
-## 📋 Índice
-
-- [Visão Geral](#visão-geral)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Arquitetura do Projeto](#arquitetura-do-projeto)
-- [Funcionalidades](#funcionalidades)
-- [Pré-requisitos](#pré-requisitos)
-- [Configuração e Instalação](#configuração-e-instalação)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [API Endpoints](#api-endpoints)
-- [Autenticação e Autorização](#autenticação-e-autorização)
-- [Banco de Dados](#banco-de-dados)
-- [Configurações](#configurações)
-- [Testes](#testes)
-- [Documentação da API](#documentação-da-api)
-
-## 🌟 Visão Geral
-
-O WeatherTrackerAPI é uma aplicação backend desenvolvida como parte de uma avaliação técnica para demonstrar conhecimentos em:
-
-- **Integração com APIs externas** (NASA API - Astronomy Picture of the Day)
-- **Arquitetura em camadas** com .NET 8
-- **Autenticação JWT**
-- **Persistência de dados** com Entity Framework Core e SQL Server
-- **Documentação** com Swagger/OpenAPI
-- **Boas práticas** de desenvolvimento
-- **Testes unitários e integração** com xUnit
-
-### 🎯 Objetivo Principal
-
-Criar uma API que consuma dados da NASA API (Astronomy Picture of the Day - APOD), processe essas informações, as armazene em um banco de dados SQL Server e forneça endpoints seguros para consulta de dados históricos e tendências astronômicas.
+```
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -249,16 +217,192 @@ Criar uma API que consuma dados da NASA API (Astronomy Picture of the Day - APOD
 
 ### Estrutura de Camadas
 
+```mermaid
+graph TB
+    subgraph "Presentation Layer"
+        C1[AuthController]
+        C2[NasaController]
+        C3[TestController]
+    end
+    
+    subgraph "Business Logic Layer"
+        S1[AuthService]
+        S2[NasaService]
+        S3[JwtAuthenticationMiddleware]
+    end
+    
+    subgraph "Data Access Layer"
+        R1[UserRepository]
+        R2[ApodRepository]
+        DB[(SQL Server Database)]
+    end
+    
+    subgraph "External Services"
+        NASA[NASA API]
+        JWT[JWT Provider]
+    end
+    
+    subgraph "Cross-Cutting Concerns"
+        AM[AutoMapper]
+        FV[FluentValidation]
+        SL[Serilog]
+        HC[Health Checks]
+    end
+    
+    C1 --> S1
+    C2 --> S2
+    C3 --> S1
+    
+    S1 --> R1
+    S2 --> R2
+    S2 --> NASA
+    S1 --> JWT
+    
+    R1 --> DB
+    R2 --> DB
+    
+    C1 -.-> AM
+    C2 -.-> AM
+    S1 -.-> FV
+    S2 -.-> SL
+    
+    style C1 fill:#e1f5fe
+    style C2 fill:#e1f5fe
+    style C3 fill:#e1f5fe
+    style S1 fill:#f3e5f5
+    style S2 fill:#f3e5f5
+    style S3 fill:#f3e5f5
+    style R1 fill:#e8f5e8
+    style R2 fill:#e8f5e8
+    style DB fill:#fff3e0
+    style NASA fill:#ffebee
+    style JWT fill:#ffebee
 ```
-┌─────────────────────────────────────┐
-│           Controllers               │ ← Presentation Layer
-├─────────────────────────────────────┤
-│           Services                  │ ← Business Logic Layer
-├─────────────────────────────────────┤
-│         Repositories                │ ← Data Access Layer
-├─────────────────────────────────────┤
-│      Models/Entities                │ ← Domain Layer
-└─────────────────────────────────────┘
+
+### Fluxo de Dados
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Controller
+    participant Service
+    participant Repository
+    participant Database
+    participant NASA_API
+    
+    Client->>Controller: HTTP Request
+    Controller->>Service: Business Logic Call
+    
+    alt NASA Data Request
+        Service->>NASA_API: Fetch APOD Data
+        NASA_API-->>Service: JSON Response
+        Service->>Repository: Store Data
+        Repository->>Database: SQL Insert/Update
+        Database-->>Repository: Success
+        Repository-->>Service: Entity
+    else User Authentication
+        Service->>Repository: Validate User
+        Repository->>Database: SQL Query
+        Database-->>Repository: User Data
+        Repository-->>Service: User Entity
+        Service->>Service: Generate JWT
+    end
+    
+    Service-->>Controller: Result
+    Controller-->>Client: HTTP Response
+```
+
+### Diagrama de Componentes
+
+```mermaid
+graph LR
+    subgraph "WeatherTrackerAPI"
+        subgraph "Controllers"
+            AC[AuthController]
+            NC[NasaController]
+            TC[TestController]
+        end
+        
+        subgraph "Services"
+            AS[AuthService]
+            NS[NasaService]
+        end
+        
+        subgraph "Repositories"
+            UR[UserRepository]
+            AR[ApodRepository]
+        end
+        
+        subgraph "Models"
+            U[User]
+            AE[ApodEntity]
+            AR2[ApodResponse]
+        end
+        
+        subgraph "DTOs"
+            LD[LoginDto]
+            RD[RegisterDto]
+            AD[ApodDto]
+            VT[ValidateTokenDto]
+        end
+        
+        subgraph "Data"
+            DC[AppDbContext]
+        end
+        
+        subgraph "Configurations"
+            JWT[JwtSettings]
+            NASA[NasaApiSettings]
+        end
+        
+        subgraph "Middleware"
+            JAM[JwtAuthenticationMiddleware]
+        end
+        
+        subgraph "Extensions"
+            SE[SwaggerExtensions]
+        end
+        
+        subgraph "Mappings"
+            AMP[AutoMapperProfile]
+        end
+    end
+    
+    subgraph "External"
+        NASAAPI[NASA API]
+        SQLDB[(SQL Server)]
+    end
+    
+    AC --> AS
+    NC --> NS
+    TC --> AS
+    
+    AS --> UR
+    NS --> AR
+    
+    UR --> DC
+    AR --> DC
+    DC --> SQLDB
+    
+    NS --> NASAAPI
+    
+    AC -.-> LD
+    AC -.-> RD
+    AC -.-> VT
+    NC -.-> AD
+    
+    AS -.-> JWT
+    NS -.-> NASA
+    
+    style AC fill:#e3f2fd
+    style NC fill:#e3f2fd
+    style TC fill:#e3f2fd
+    style AS fill:#f3e5f5
+    style NS fill:#f3e5f5
+    style UR fill:#e8f5e8
+    style AR fill:#e8f5e8
+    style SQLDB fill:#fff3e0
+    style NASAAPI fill:#ffebee
 ```
 
 ### Principais Funcionalidades
