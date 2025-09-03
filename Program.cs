@@ -18,33 +18,41 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Controllers and caching
 builder.Services.AddControllers();
 builder.Services.AddMemoryCache();
 
+// Database configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Configuration bindings
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.Configure<NasaApiSettings>(builder.Configuration.GetSection("NasaApiSettings"));
 
+// AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
+// Validation
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
+// HTTP Client for NASA API
 builder.Services.AddHttpClient<INasaService, NasaService>(client =>
 {
     var baseUrl = builder.Configuration["NasaApiSettings:BaseUrl"] ?? "https://api.nasa.gov";
     var timeoutInSeconds = builder.Configuration.GetValue<int>("NasaApiSettings:TimeoutInSeconds", 30);
     
-    Console.WriteLine($"[DEBUG] Configuring HttpClient with BaseUrl: {baseUrl}");
     client.BaseAddress = new Uri(baseUrl);
     client.Timeout = TimeSpan.FromSeconds(timeoutInSeconds);
 });
 
+// Dependency injection
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IApodRepository, ApodRepository>();
+
+// JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -62,6 +70,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -97,11 +106,13 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// Health checks
 builder.Services.AddHealthChecks()
     .AddSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")!);
 
 var app = builder.Build();
 
+// Development environment setup
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -112,6 +123,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// Database initialization
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -125,6 +137,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// Pipeline configuration
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

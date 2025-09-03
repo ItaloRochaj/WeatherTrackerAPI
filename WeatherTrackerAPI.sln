@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherTrackerAPI", "WeatherTrackerAPI.csproj", "{93678FA1-8B66-D93C-7344-D355FBEE30B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherTrackerAPI.Tests", "WeatherTrackerAPI.Tests\WeatherTrackerAPI.Tests.csproj", "{3B0FB0C2-9F86-4474-892E-B88AA12324EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherTrackerAPI.Tests", "WeatherTrackerAPI.Tests\WeatherTrackerAPI.Tests.csproj", "{99B15DBD-A7D4-4DB9-98D4-6AD755EE9C21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,18 +29,18 @@ Global
 		{93678FA1-8B66-D93C-7344-D355FBEE30B2}.Release|x64.Build.0 = Release|Any CPU
 		{93678FA1-8B66-D93C-7344-D355FBEE30B2}.Release|x86.ActiveCfg = Release|Any CPU
 		{93678FA1-8B66-D93C-7344-D355FBEE30B2}.Release|x86.Build.0 = Release|Any CPU
-		{3B0FB0C2-9F86-4474-892E-B88AA12324EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B0FB0C2-9F86-4474-892E-B88AA12324EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3B0FB0C2-9F86-4474-892E-B88AA12324EC}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3B0FB0C2-9F86-4474-892E-B88AA12324EC}.Debug|x64.Build.0 = Debug|Any CPU
-		{3B0FB0C2-9F86-4474-892E-B88AA12324EC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3B0FB0C2-9F86-4474-892E-B88AA12324EC}.Debug|x86.Build.0 = Debug|Any CPU
-		{3B0FB0C2-9F86-4474-892E-B88AA12324EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B0FB0C2-9F86-4474-892E-B88AA12324EC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3B0FB0C2-9F86-4474-892E-B88AA12324EC}.Release|x64.ActiveCfg = Release|Any CPU
-		{3B0FB0C2-9F86-4474-892E-B88AA12324EC}.Release|x64.Build.0 = Release|Any CPU
-		{3B0FB0C2-9F86-4474-892E-B88AA12324EC}.Release|x86.ActiveCfg = Release|Any CPU
-		{3B0FB0C2-9F86-4474-892E-B88AA12324EC}.Release|x86.Build.0 = Release|Any CPU
+		{99B15DBD-A7D4-4DB9-98D4-6AD755EE9C21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99B15DBD-A7D4-4DB9-98D4-6AD755EE9C21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99B15DBD-A7D4-4DB9-98D4-6AD755EE9C21}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{99B15DBD-A7D4-4DB9-98D4-6AD755EE9C21}.Debug|x64.Build.0 = Debug|Any CPU
+		{99B15DBD-A7D4-4DB9-98D4-6AD755EE9C21}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{99B15DBD-A7D4-4DB9-98D4-6AD755EE9C21}.Debug|x86.Build.0 = Debug|Any CPU
+		{99B15DBD-A7D4-4DB9-98D4-6AD755EE9C21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99B15DBD-A7D4-4DB9-98D4-6AD755EE9C21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99B15DBD-A7D4-4DB9-98D4-6AD755EE9C21}.Release|x64.ActiveCfg = Release|Any CPU
+		{99B15DBD-A7D4-4DB9-98D4-6AD755EE9C21}.Release|x64.Build.0 = Release|Any CPU
+		{99B15DBD-A7D4-4DB9-98D4-6AD755EE9C21}.Release|x86.ActiveCfg = Release|Any CPU
+		{99B15DBD-A7D4-4DB9-98D4-6AD755EE9C21}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
