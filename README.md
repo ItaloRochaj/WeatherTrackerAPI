@@ -18,7 +18,11 @@ Uma API RESTful desenvolvida em .NET 8 que integra com a NASA API para coletar, 
 - [Testes](#testes)
 - [Documentação da API](#documentação-da-api)
 
+<<<<<<< HEAD
 ## 🎯 Visão Geral
+=======
+## � Visão Geral
+>>>>>>> a46ba4988c3b82aeec606d835bb86ccb6a563a46
 
 O WeatherTrackerAPI é uma aplicação backend desenvolvida como parte de uma avaliação técnica para demonstrar conhecimentos em:
 
@@ -33,6 +37,11 @@ O WeatherTrackerAPI é uma aplicação backend desenvolvida como parte de uma av
 ### Objetivo Principal
 
 Criar uma API que consuma dados da NASA API (Astronomy Picture of the Day - APOD), processe essas informações, as armazene em um banco de dados SQL Server e forneça endpoints seguros para consulta de dados históricos e tendências astronômicas.
+<<<<<<< HEAD
+=======
+
+```
+>>>>>>> a46ba4988c3b82aeec606d835bb86ccb6a563a46
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -398,7 +407,11 @@ WeatherTrackerAPI/
 
 ## 🗄️ Banco de Dados
 
+<<<<<<< HEAD
 ### Estrutura do Banco de Dados
+=======
+### Banco de Dados
+>>>>>>> a46ba4988c3b82aeec606d835bb86ccb6a563a46
 
 #### Users
 
@@ -566,7 +579,10 @@ Para deploy em produção, considere:
 4. **Monitoramento** com Application Insights
 5. **Docker** para containerização
 
+<<<<<<< HEAD
 ---
+=======
+>>>>>>> a46ba4988c3b82aeec606d835bb86ccb6a563a46
 ### 👨🏻‍💻 Autor:
 <table style="border=0">
   <tr>
@@ -579,6 +595,13 @@ Para deploy em produção, considere:
     </td>
   </tr>
 </table>
+<<<<<<< HEAD
 ---
 
 **NASA API**: Este projeto utiliza a [NASA Open Data API](https://api.nasa.gov/) para obter dados da Astronomy Picture of the Day (APOD).
+=======
+
+---
+
+**NASA API**: Este projeto utiliza a [NASA Open Data API](https://api.nasa.gov/) para obter dados da Astronomy Picture of the Day (APOD).
+>>>>>>> a46ba4988c3b82aeec606d835bb86ccb6a563a46
