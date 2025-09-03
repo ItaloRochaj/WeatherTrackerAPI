@@ -3,7 +3,6 @@
 Uma API RESTful desenvolvida em .NET 8 que integra com a NASA API para coletar, processar e armazenar dados astronômicos, fornecendo endpoints seguros para consulta de informações espaciais históricas e em tempo real.
 
 ## 📋 Índice
-
 - [Visão Geral](#visão-geral)
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Arquitetura do Projeto](#arquitetura-do-projeto)
@@ -18,14 +17,9 @@ Uma API RESTful desenvolvida em .NET 8 que integra com a NASA API para coletar, 
 - [Testes](#testes)
 - [Documentação da API](#documentação-da-api)
 
-<<<<<<< HEAD
+
 ## 🎯 Visão Geral
-=======
-## � Visão Geral
->>>>>>> a46ba4988c3b82aeec606d835bb86ccb6a563a46
-
 O WeatherTrackerAPI é uma aplicação backend desenvolvida como parte de uma avaliação técnica para demonstrar conhecimentos em:
-
 - **Integração com APIs externas** (NASA API - Astronomy Picture of the Day)
 - **Arquitetura em camadas** com .NET 8
 - **Autenticação JWT**
@@ -35,18 +29,11 @@ O WeatherTrackerAPI é uma aplicação backend desenvolvida como parte de uma av
 - **Testes unitários e integração** com xUnit
 
 ### Objetivo Principal
-
 Criar uma API que consuma dados da NASA API (Astronomy Picture of the Day - APOD), processe essas informações, as armazene em um banco de dados SQL Server e forneça endpoints seguros para consulta de dados históricos e tendências astronômicas.
-<<<<<<< HEAD
-=======
-
-```
->>>>>>> a46ba4988c3b82aeec606d835bb86ccb6a563a46
 
 ## 🛠️ Tecnologias Utilizadas
 
 ### Backend
-
 - **.NET 8** - Framework principal
 - **ASP.NET Core Web API** - Para criação da API REST
 - **Entity Framework Core** - ORM para acesso ao banco de dados
@@ -55,7 +42,6 @@ Criar uma API que consuma dados da NASA API (Astronomy Picture of the Day - APOD
 - **JWT Bearer** - Autenticação e autorização
 
 ### Ferramentas e Bibliotecas
-
 - **Swagger/OpenAPI** - Documentação da API
 - **Serilog** - Logging estruturado
 - **FluentValidation** - Validação de dados
@@ -259,25 +245,21 @@ graph LR
 ### Principais Funcionalidades
 
 #### 1. ✅ Integração com API de Terceiros
-
 - **NASA APOD API**: Busca dados astronômicos diários
 - **Processamento**: Transformação e validação dos dados
 - **Cache**: Armazenamento em cache para otimização
 
 #### 2. ✅ Banco de Dados SQL Server
-
 - **Entity Framework Core**: ORM para acesso aos dados
 - **Migrações**: Controle de versão do banco
 - **Consultas otimizadas**: Queries eficientes
 
 #### 3. ✅ Autenticação e Autorização
-
 - **JWT Tokens**: Autenticação stateless
 - **Roles**: Controle de acesso baseado em funções
 - **Middleware personalizado**: Para logging e validação
 
 ## 📋 Pré-requisitos
-
 - **.NET 8 SDK** ou superior
 - **SQL Server** 2019 ou superior (ou SQL Server Express)
 - **Visual Studio Code** ou **Visual Studio** (recomendado)
@@ -286,7 +268,6 @@ graph LR
 ## ⚙️ Configuração e Instalação
 
 ### 1. Clone o repositório
-
 ```bash
 git clone https://github.com/ItaloRochaj/WeatherTrackerAPI.git
 cd WeatherTrackerAPI
@@ -318,20 +299,17 @@ Atualize a chave da API no `appsettings.json`:
 ```
 
 ### 4. Restaure os pacotes e execute as migrações
-
 ```bash
 dotnet restore
 dotnet ef database update
 ```
 
 ### 5. Execute a aplicação
-
 ```bash
 dotnet run
 ```
 
 A aplicação estará disponível em:
-
 - **HTTP**: `http://localhost:5170`
 - **HTTPS**: `https://localhost:7230`
 - **Swagger UI**: `https://localhost:7230/swagger` (página inicial)
@@ -379,7 +357,6 @@ WeatherTrackerAPI/
 ## 🔐 API Endpoints
 
 ### Autenticação (`/api/auth`)
-
 | Método | Endpoint | Descrição | Autenticação |
 |--------|----------|-----------|--------------|
 | POST | `/register` | Registra novo usuário | ❌ |
@@ -407,14 +384,9 @@ WeatherTrackerAPI/
 
 ## 🗄️ Banco de Dados
 
-<<<<<<< HEAD
 ### Estrutura do Banco de Dados
-=======
-### Banco de Dados
->>>>>>> a46ba4988c3b82aeec606d835bb86ccb6a563a46
 
 #### Users
-
 - **Id**: GUID (PK)
 - **Email**: VARCHAR(255) UNIQUE
 - **PasswordHash**: VARCHAR(255)
@@ -426,7 +398,6 @@ WeatherTrackerAPI/
 - **IsActive**: BOOLEAN
 
 #### ApodData
-
 - **Id**: GUID (PK)
 - **Date**: DATETIME UNIQUE
 - **Title**: VARCHAR(500)
@@ -442,11 +413,9 @@ WeatherTrackerAPI/
 - **IsFavorited**: BOOLEAN
 
 ## 🧪 Testes
-
 O projeto inclui um conjunto abrangente de testes para garantir a qualidade e confiabilidade do código.
 
 ### Executar Testes
-
 ```bash
 # Executar todos os testes
 dotnet test
@@ -459,7 +428,6 @@ dotnet test --filter "FullyQualifiedName~AuthController"
 ```
 
 ### Estrutura de Testes
-
 ```text
 WeatherTrackerAPI.Tests/
 ├── UnitTest1.cs                    # Testes básicos de exemplo
@@ -467,7 +435,6 @@ WeatherTrackerAPI.Tests/
 ```
 
 ### Tecnologias de Teste
-
 - **xUnit 2.9.2** - Framework de testes principal
 - **Microsoft.AspNetCore.Mvc.Testing** - Testes de integração
 - **Moq 4.20.72** - Biblioteca de mocking
@@ -475,7 +442,6 @@ WeatherTrackerAPI.Tests/
 - **Microsoft.EntityFrameworkCore.InMemory** - Banco de dados em memória para testes
 
 ### Tipos de Testes Implementados
-
 - **Testes Unitários**: Validação de lógica de negócio isolada
 - **Testes de Integração**: Validação de endpoints da API
 - **Testes de Repositório**: Validação de acesso a dados
@@ -557,7 +523,6 @@ curl -X GET "https://localhost:7240/api/nasa/apod?date=2024-01-01" \
 - [x] Documentação Swagger
 
 ### ✅ Funcionalidades Extras
-
 - [x] Cache em memória
 - [x] Health checks
 - [x] Logging estruturado (Serilog)
@@ -579,10 +544,6 @@ Para deploy em produção, considere:
 4. **Monitoramento** com Application Insights
 5. **Docker** para containerização
 
-<<<<<<< HEAD
----
-=======
->>>>>>> a46ba4988c3b82aeec606d835bb86ccb6a563a46
 ### 👨🏻‍💻 Autor:
 <table style="border=0">
   <tr>
@@ -595,13 +556,5 @@ Para deploy em produção, considere:
     </td>
   </tr>
 </table>
-<<<<<<< HEAD
----
 
 **NASA API**: Este projeto utiliza a [NASA Open Data API](https://api.nasa.gov/) para obter dados da Astronomy Picture of the Day (APOD).
-=======
-
----
-
-**NASA API**: Este projeto utiliza a [NASA Open Data API](https://api.nasa.gov/) para obter dados da Astronomy Picture of the Day (APOD).
->>>>>>> a46ba4988c3b82aeec606d835bb86ccb6a563a46
