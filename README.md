@@ -2,6 +2,18 @@
 
 Uma API RESTful desenvolvida em .NET 8 que integra com a NASA API para coletar, processar e armazenar dados astronômicos, fornecendo endpoints seguros para consulta de informações espaciais históricas e em tempo real.
 
+## 🛠️ Tecnologias Utilizadas
+
+[![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=flat&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![SQL Server](https://img.shields.io/badge/SQL%20Server-2022-CC2927?style=flat&logo=microsoftsqlserver&logoColor=white)](https://www.microsoft.com/sql-server)
+[![Entity Framework Core](https://img.shields.io/badge/Entity%20Framework-Core-5C2D91?style=flat&logo=nuget&logoColor=white)](https://learn.microsoft.com/ef/)
+[![Swagger](https://img.shields.io/badge/Swagger-UI-85EA2D?style=flat&logo=swagger&logoColor=black)](https://swagger.io/)
+[![JWT](https://img.shields.io/badge/JWT-Auth-000000?style=flat&logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
+[![Serilog](https://img.shields.io/badge/Serilog-Logging-1E90FF?style=flat&logo=serilog&logoColor=white)](https://serilog.net/)
+[![FluentValidation](https://img.shields.io/badge/FluentValidation-Validator-006600?style=flat&logo=.net&logoColor=white)](https://docs.fluentvalidation.net/en/latest/)
+
+---
+
 ## 📋 Índice
 - [Visão Geral](#visão-geral)
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
@@ -17,38 +29,6 @@ Uma API RESTful desenvolvida em .NET 8 que integra com a NASA API para coletar, 
 - [Testes Unitários](#testes)
 - [Documentação da API](#documentação-da-api)
 
-
-## 📝 Documentação e Testes
-
-### Swagger UI
-A documentação interativa da API está disponível através do Swagger UI nos seguintes endpoints:
-
-- **Desenvolvimento Local:**
-  - http://localhost:5170
-  - https://localhost:7230 (HTTPS)
-
-O Swagger UI fornece:
-- Documentação completa de todos os endpoints
-- Interface interativa para teste das APIs
-- Descrições detalhadas dos schemas e modelos
-- Suporte à autenticação JWT Bearer
-- Exemplos de requisição e resposta
-
-### Teste de Endpoints com Bruno
-O projeto inclui uma coleção de testes de API usando o Bruno, uma ferramenta moderna para teste de APIs REST. A coleção contém:
-
-- Testes para todos os endpoints da API
-- Exemplos de requisições pré-configuradas
-- Ambiente de desenvolvimento configurado
-- Validação de respostas
-- Testes de autenticação e autorização
-
-Para usar o Bruno:
-1. Instale o Bruno através do site oficial: https://www.usebruno.com/
-2. Abra a coleção localizada na pasta raiz do projeto
-3. Configure o ambiente conforme necessário
-4. Execute os testes dos endpoints
-
 ## 🎯 Visão Geral
 O WeatherTrackerAPI é uma aplicação backend desenvolvida como parte de uma avaliação técnica para demonstrar conhecimentos em:
 - **Integração com APIs externas** (NASA API - Astronomy Picture of the Day)
@@ -61,6 +41,22 @@ O WeatherTrackerAPI é uma aplicação backend desenvolvida como parte de uma av
 
 ### Objetivo Principal
 Criar uma API que consuma dados da NASA API (Astronomy Picture of the Day - APOD), processe essas informações, as armazene em um banco de dados SQL Server e forneça endpoints seguros para consulta de dados históricos e tendências astronômicas.
+
+---
+
+## 🔐 Autenticação e Autorização
+
+O WeatherTrackerAPI implementa autenticação **JWT (JSON Web Token)** para garantir segurança e acesso controlado aos endpoints.
+
+Exemplo de requisição **Login** usando **Bruno API Client**:
+
+![Login via Bruno Client](./9cbc3aa0-2b46-4076-9dde-a85de91aed73.png)
+
+- O usuário envia **e-mail** e **senha**
+- A API retorna um **token JWT**
+- Esse token deve ser utilizado no header `Authorization: Bearer {TOKEN}` para acessar os endpoints protegidos.
+
+---
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -774,10 +770,15 @@ Para informações detalhadas sobre estratégias de teste e planejamento futuro,
 
 ## 📚 Documentação da API
 
-A documentação completa da API está disponível através do Swagger UI quando a aplicação está em execução:
+A documentação completa da API está disponível através do **Swagger UI** quando a aplicação está em execução:
+
+![Swagger UI - WeatherTrackerAPI](./4deb2903-74c6-4551-92d6-5d0b538ec228.png)
 
 - **URL**: `https://localhost:7240`
 - **Swagger JSON**: `https://localhost:7240/swagger/v1/swagger.json`
+
+---
+
 
 ### Exemplo de Uso
 
