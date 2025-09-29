@@ -1,0 +1,32 @@
+<section class="historical-data">
+  <div class="container">
+    <div class="historical-content">
+      <div class="historical-info">
+        <h2 class="section-title">Historical Data</h2>
+        <h3 class="section-subtitle">Explore Past Astronomical Events</h3>
+        <p class="section-description">
+          Dive into our extensive archive of astronomical events. Search
+          <br>by keywords to uncover fascinating historical data and
+          <br>images.
+        </p>
+
+        <button class="btn btn-primary" routerLink="/gallery">
+          Search Archive
+        </button>
+      </div>
+
+      <div class="historical-visual">
+        <div class="cosmic-background">
+          <div class="cosmic-spiral"></div>
+          <div class="stars-field">
+            <div class="star" *ngFor="let star of stars"
+                 [style.left.%]="star.x"
+                 [style.top.%]="star.y"
+                 [style.animation-delay.s]="star.delay">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

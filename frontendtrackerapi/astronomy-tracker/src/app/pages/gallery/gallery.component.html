@@ -1,0 +1,140 @@
+<div class="gallery-page">
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title">Astronomy Gallery</h1>
+      <p class="page-subtitle">Explore our collection of spectacular cosmic images and historical astronomical data</p>
+
+      <!-- Search Section -->
+      <div class="search-section">
+        <div class="search-box">
+          <input
+            type="text"
+            placeholder="Search by keywords..."
+            class="search-input"
+            [(ngModel)]="searchQuery"
+            (keyup.enter)="performSearch()"
+          >
+          <button class="search-btn" (click)="performSearch()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            Search
+          </button>
+        </div>
+
+        <div class="date-filter">
+          <label for="startDate">From:</label>
+          <input
+            type="date"
+            id="startDate"
+            [(ngModel)]="startDate"
+            class="date-input"
+          >
+          <label for="endDate">To:</label>
+          <input
+            type="date"
+            id="endDate"
+            [(ngModel)]="endDate"
+            class="date-input"
+          >
+          <button class="btn btn-secondary" (click)="applyDateFilter()">
+            Apply Filter
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="gallery-section">
+    <div class="container">
+      <!-- Results Info -->
+      <div class="results-info" *ngIf="galleryItems && galleryItems.length > 0">
+        <p>{{ galleryItems.length }} results found</p>
+        <button class="btn btn-secondary" (click)="clearFilters()" *ngIf="hasActiveFilters()">
+          Clear Filters
+        </button>
+      </div>
+
+      <!-- Gallery Grid -->
+      <div class="gallery-grid" *ngIf="galleryItems && galleryItems.length > 0; else loading">
+        <div class="gallery-item" *ngFor="let item of galleryItems">
+          <div class="gallery-image">
+            <img
+              [src]="item.imageUrl || 'assets/images/placeholder.jpg'"
+              [alt]="item.title"
+              class="gallery-img"
+              (click)="openModal(item)"
+            >
+            <div class="gallery-overlay">
+              <h3 class="gallery-title">{{ item.title }}</h3>
+              <p class="gallery-date">{{ formatDate(item.date) }}</p>
+              <button class="view-btn" (click)="openModal(item)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                View Details
+              </button>
+            </div>
+          </div>
+
+          <div class="gallery-tags" *ngIf="item.tags && item.tags.length > 0">
+            <span class="tag" *ngFor="let tag of item.tags">{{ tag }}</span>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #loading>
+        <div class="loading-container">
+          <div class="loading"></div>
+          <p>{{ isSearching ? 'Searching...' : 'Loading gallery...' }}</p>
+        </div>
+      </ng-template>
+
+      <!-- Error State -->
+      <div class="error-container" *ngIf="error">
+        <p class="error-message">{{ error }}</p>
+        <button class="btn btn-secondary" (click)="retry()">Try Again</button>
+      </div>
+
+      <!-- No Results -->
+      <div class="no-results" *ngIf="!isLoading && galleryItems && galleryItems.length === 0 && !error">
+        <div class="no-results-icon">🔍</div>
+        <h3>No results found</h3>
+        <p>Try adjusting your search criteria or browse without filters.</p>
+        <button class="btn btn-primary" (click)="clearFilters()">Show All</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal -->
+  <div class="modal-overlay" [class.active]="selectedItem" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()" *ngIf="selectedItem">
+      <button class="modal-close" (click)="closeModal()">×</button>
+
+      <div class="modal-image">
+        <img [src]="selectedItem.imageUrl" [alt]="selectedItem.title">
+      </div>
+
+      <div class="modal-info">
+        <h2>{{ selectedItem.title }}</h2>
+        <p class="modal-date">{{ formatDate(selectedItem.date) }}</p>
+        <p class="modal-description">{{ selectedItem.description }}</p>
+
+        <div class="modal-tags" *ngIf="selectedItem.tags && selectedItem.tags.length > 0">
+          <span class="tag" *ngFor="let tag of selectedItem.tags">{{ tag }}</span>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn btn-primary" (click)="downloadImage()">
+            Download Image
+          </button>
+          <button class="btn btn-secondary" (click)="shareItem()">
+            Share
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

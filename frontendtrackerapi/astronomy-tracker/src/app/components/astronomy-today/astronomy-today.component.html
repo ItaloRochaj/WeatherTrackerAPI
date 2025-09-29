@@ -1,0 +1,88 @@
+<section class="astronomy-today">
+  <div class="container">
+    <h2 class="section-title">Today's Astronomy</h2>
+
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="isLoading">
+      <div class="loading"></div>
+      <p>Loading today's astronomy image...</p>
+    </div>
+
+    <!-- Content -->
+    <div class="astronomy-content" *ngIf="astronomyData && !isLoading">
+      <div class="astronomy-image">
+        <img
+          [src]="astronomyData.url"
+          [alt]="astronomyData.title"
+          (load)="onImageLoad()"
+          (error)="onImageError()"
+          class="astronomy-img"
+        >
+        <div class="image-overlay" *ngIf="showOverlay">
+          <button class="overlay-btn" (click)="viewFullImage()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15,3 21,3 21,9"></polyline>
+              <polyline points="9,21 3,21 3,15"></polyline>
+              <line x1="21" y1="3" x2="14" y2="10"></line>
+              <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
+            View Full Size
+          </button>
+        </div>
+      </div>
+
+      <div class="astronomy-info">
+        <div class="title-row">
+          <h3 class="astronomy-title">{{ astronomyData.title }}</h3>
+          <button 
+            class="favorite-btn" 
+            (click)="onToggleFavorite()"
+            [class.favorited]="astronomyData.isFavorited">
+            <svg width="24" height="24" viewBox="0 0 24 24" [attr.fill]="astronomyData.isFavorited ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2">
+              <path d="m19,21l-7-4-7,4V5a2,2,0,0,1,2-2H17a2,2,0,0,1,2,2Z"/>
+            </svg>
+          </button>
+        </div>
+        
+        <p class="astronomy-date">{{ formatDate(astronomyData.date) }}</p>
+        
+        <!-- Rating Section -->
+        <div class="rating-section" *ngIf="astronomyData.id">
+          <span class="rating-label">Rate this image:</span>
+          <div class="stars">
+            <button 
+              *ngFor="let star of [1,2,3,4,5]" 
+              class="star" 
+              [class.filled]="star <= (astronomyData.rating || 0)"
+              (click)="onRateImage(star)">
+              ★
+            </button>
+          </div>
+          <span class="rating-value" *ngIf="astronomyData.rating">
+            {{ astronomyData.rating }}/5
+          </span>
+        </div>
+
+        <p class="astronomy-description">{{ astronomyData.explanation }}</p>
+        <p class="astronomy-copyright" *ngIf="astronomyData.copyright">
+          <em>© {{ astronomyData.copyright }}</em>
+        </p>
+
+        <div class="action-buttons">
+          <button class="btn btn-primary" (click)="viewFullImage()">
+            View Full Image
+          </button>
+          <button class="btn btn-secondary" (click)="retry()">
+            Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-container" *ngIf="error && !isLoading">
+      <p class="error-message">{{ error }}</p>
+      <button class="btn btn-secondary" (click)="retry()">Try Again</button>
+    </div>
+  </div>
+</section>

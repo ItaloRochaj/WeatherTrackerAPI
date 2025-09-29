@@ -1,0 +1,128 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { map, catchError, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { 
+  LoginDto, 
+  LoginResponseDto, 
+  RegisterDto, 
+  RegisterResponseDto,
+  ValidateTokenDto,
+  ValidateTokenResponseDto,
+  UserDto 
+} from '../models/astronomy.models';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+  private baseUrl = environment.apiUrl;
+  private currentUserSubject = new BehaviorSubject<UserDto | null>(null);
+  private tokenSubject = new BehaviorSubject<string | null>(null);
+
+  public currentUser$ = this.currentUserSubject.asObservable();
+  public token$ = this.tokenSubject.asObservable();
+
+  constructor(private http: HttpClient) {
+    // Check for existing token on init
+    const token = localStorage.getItem('auth_token');
+    const user = localStorage.getItem('current_user');
+    
+    if (token && user) {
+      this.tokenSubject.next(token);
+      this.currentUserSubject.next(JSON.parse(user));
+    }
+  }
+
+  public get currentUserValue(): UserDto | null {
+    return this.currentUserSubject.value;
+  }
+
+  public get tokenValue(): string | null {
+    return this.tokenSubject.value;
+  }
+
+  public get isAuthenticated(): boolean {
+    return !!this.tokenValue;
+  }
+
+  login(credentials: LoginDto): Observable<LoginResponseDto> {
+    return this.http.post<LoginResponseDto>(`${this.baseUrl}/auth/login`, credentials)
+      .pipe(
+        tap(response => {
+          // Store token and user info
+          localStorage.setItem('auth_token', response.token);
+          localStorage.setItem('current_user', JSON.stringify(response.user));
+          
+          this.tokenSubject.next(response.token);
+          this.currentUserSubject.next(response.user);
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  register(userData: RegisterDto): Observable<RegisterResponseDto> {
+    return this.http.post<RegisterResponseDto>(`${this.baseUrl}/auth/register`, userData)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  validateToken(token: string): Observable<ValidateTokenResponseDto> {
+    const validateData: ValidateTokenDto = { token };
+    return this.http.post<ValidateTokenResponseDto>(`${this.baseUrl}/auth/validate`, validateData)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  logout(): void {
+    // Remove stored data
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('current_user');
+    
+    // Update subjects
+    this.tokenSubject.next(null);
+    this.currentUserSubject.next(null);
+  }
+
+  // Get authorization header for HTTP requests
+  getAuthHeaders(): { [header: string]: string } {
+    const token = this.tokenValue;
+    if (token) {
+      return {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+    }
+    return {
+      'Content-Type': 'application/json'
+    };
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      if (error.status === 401) {
+        errorMessage = 'Invalid credentials';
+      } else if (error.status === 409) {
+        errorMessage = 'Email already registered';
+      } else if (error.status === 400) {
+        errorMessage = 'Invalid data provided';
+      } else if (error.status === 500) {
+        errorMessage = 'Server error. Please try again later.';
+      } else {
+        errorMessage = error.error?.message || `Error Code: ${error.status}`;
+      }
+    }
+    
+    console.error('Auth Service Error:', errorMessage);
+    return throwError(() => errorMessage);
+  }
+}

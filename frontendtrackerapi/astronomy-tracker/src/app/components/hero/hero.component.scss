@@ -1,0 +1,219 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  .hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+
+    .stars {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+
+      &::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image:
+          radial-gradient(2px 2px at 20% 30%, #eee, transparent),
+          radial-gradient(2px 2px at 40% 70%, rgba(255,255,255,0.8), transparent),
+          radial-gradient(1px 1px at 90% 40%, #fff, transparent),
+          radial-gradient(1px 1px at 50% 50%, #fff, transparent),
+          radial-gradient(2px 2px at 70% 20%, #fff, transparent);
+        background-size: 550px 550px, 350px 350px, 250px 250px, 400px 400px, 300px 300px;
+        background-repeat: repeat;
+        animation: twinkle 10s infinite ease-in-out;
+      }
+    }
+
+    .gradient-overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(ellipse at center bottom,
+          rgba(74, 144, 226, 0.3) 0%,
+          rgba(26, 31, 53, 0.8) 50%,
+          rgba(10, 14, 26, 0.95) 100%
+        );
+    }
+  }
+
+  .hero-content {
+    text-align: center;
+    z-index: 1;
+    max-width: 800px;
+    padding: 2rem;
+
+    .hero-title {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(45deg, #ffffff, #b3d9ff, #4a90e2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(74, 144, 226, 0.3);
+      line-height: 1.2;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      color: #b8c5d6;
+      margin-bottom: 3rem;
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+
+      .date-selector {
+        position: relative;
+
+        .date-toggle {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 12px 20px;
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 25px;
+          color: #b8c5d6;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-size: 14px;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(74, 144, 226, 0.5);
+            color: white;
+          }
+
+          svg {
+            opacity: 0.7;
+          }
+        }
+
+        .date-picker {
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          margin-top: 0.5rem;
+          background: rgba(0, 0, 0, 0.9);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 10px;
+          padding: 1rem;
+          backdrop-filter: blur(20px);
+          min-width: 200px;
+
+          .date-input {
+            width: 100%;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+
+            &:focus {
+              outline: none;
+              border-color: #4a90e2;
+              box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+            }
+
+            // Custom date picker styles for WebKit browsers
+            &::-webkit-calendar-picker-indicator {
+              filter: invert(1);
+              cursor: pointer;
+            }
+          }
+        }
+
+        &.active .date-toggle {
+          background: rgba(74, 144, 226, 0.2);
+          border-color: #4a90e2;
+          color: white;
+        }
+      }
+
+      .btn {
+        font-size: 1rem;
+        padding: 15px 30px;
+        min-width: 200px;
+      }
+    }
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .hero {
+    .hero-content {
+      padding: 1rem;
+
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        gap: 1rem;
+
+        .date-selector .date-picker {
+          left: 0;
+          right: 0;
+          transform: none;
+        }
+
+        .btn {
+          min-width: auto;
+          width: 100%;
+          max-width: 280px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    .hero-content {
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .hero-actions {
+        .date-selector .date-toggle {
+          padding: 10px 16px;
+          font-size: 13px;
+        }
+      }
+    }
+  }
+}

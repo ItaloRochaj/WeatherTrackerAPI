@@ -1,0 +1,102 @@
+<nav class="navbar">
+  <div class="container">
+    <div class="nav-content">
+      <!-- Logo -->
+      <div class="nav-brand">
+        <a routerLink="/" class="brand-link">
+          <div class="logo-icon">🔭</div>
+          <span class="brand-text">AstronomyTracker</span>
+        </a>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="nav-links" [class.nav-open]="isMenuOpen">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Home</a>
+        <a routerLink="/events" routerLinkActive="active" class="nav-link">Events</a>
+        <a routerLink="/gallery" routerLinkActive="active" class="nav-link">Gallery</a>
+        <a routerLink="/about" routerLinkActive="active" class="nav-link">About</a>
+      </div>
+
+      <!-- Action Icons -->
+      <div class="nav-actions">
+        <button class="icon-btn search-btn" (click)="toggleSearch()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </button>
+
+        <!-- Authentication Section -->
+        <div class="auth-section" *ngIf="!isAuthenticated">
+          <button class="auth-btn login-btn" (click)="navigateToLogin()">
+            Sign In
+          </button>
+          <button class="auth-btn register-btn" (click)="navigateToRegister()">
+            Sign Up
+          </button>
+        </div>
+
+        <!-- User Menu (when authenticated) -->
+        <div class="user-menu-container" *ngIf="isAuthenticated">
+          <button class="user-profile-btn" (click)="toggleUserMenu()">
+            <div class="user-avatar">
+              {{ currentUser?.firstName?.charAt(0) }}{{ currentUser?.lastName?.charAt(0) }}
+            </div>
+            <span class="user-name">{{ currentUser?.firstName }}</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6"></path>
+            </svg>
+          </button>
+
+          <!-- User Dropdown Menu -->
+          <div class="user-dropdown" [class.show]="showUserMenu">
+            <div class="user-info">
+              <div class="user-details">
+                <div class="user-full-name">{{ currentUser?.fullName }}</div>
+                <div class="user-email">{{ currentUser?.email }}</div>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" (click)="logout()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16,17 21,12 16,7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              Sign Out
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-toggle" (click)="toggleMenu()">
+          <span class="hamburger-line" [class.open]="isMenuOpen"></span>
+          <span class="hamburger-line" [class.open]="isMenuOpen"></span>
+          <span class="hamburger-line" [class.open]="isMenuOpen"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" [class.active]="showSearch" (click)="closeSearch()">
+    <div class="search-content" (click)="$event.stopPropagation()">
+      <div class="search-box">
+        <input
+          type="text"
+          placeholder="Search astronomy events, images..."
+          class="search-input"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="performSearch()"
+        >
+        <button class="search-submit" (click)="performSearch()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </button>
+      </div>
+      <button class="close-search" (click)="closeSearch()">×</button>
+    </div>
+  </div>
+</nav>
