@@ -33,9 +33,8 @@ namespace WeatherTrackerAPI.Controllers
         {
             try
             {
-                // Use uma data conhecida válida se nenhuma data for especificada
-                // Para evitar problemas com datas futuras ou configurações incorretas do sistema
-                var targetDate = date ?? new DateTime(2024, 8, 29); // Data conhecida válida
+                // Use a data atual se nenhuma data for especificada
+                var targetDate = date ?? DateTime.Now.Date;
                 
                 if (targetDate > DateTime.Now.Date)
                 {

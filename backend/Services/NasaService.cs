@@ -53,17 +53,20 @@ namespace WeatherTrackerAPI.Services
             
             if (_cache.TryGetValue(cacheKey, out ApodDto? cachedApod) && cachedApod != null)
             {
+                _logger.LogInformation("Returning cached APOD for date: {Date}", date);
                 return cachedApod;
             }
 
             var storedApod = await _apodRepository.GetByDateAsync(date);
             if (storedApod != null)
             {
+                _logger.LogInformation("Found stored APOD for date: {Date}, Title: {Title}", date, storedApod.Title);
                 var dto = _mapper.Map<ApodDto>(storedApod);
                 _cache.Set(cacheKey, dto, TimeSpan.FromHours(1));
                 return dto;
             }
 
+            _logger.LogInformation("No stored APOD found for date: {Date}, fetching from NASA API", date);
             return await SyncApodFromNasaAsync(date);
         }
 
@@ -114,6 +117,47 @@ namespace WeatherTrackerAPI.Services
                     throw new InvalidOperationException("Failed to deserialize NASA API response");
                 }
 
+                // Verificar se já existe um registro para esta data e removê-lo se estiver incorreto
+                var existingApod = await _apodRepository.GetByDateAsync(date);
+                if (existingApod != null)
+                {
+                    _logger.LogInformation("Found existing APOD for date {Date}, Title: {ExistingTitle}. New Title: {NewTitle}", 
+                        date, existingApod.Title, nasaApod.Title);
+                    
+                    // Se o título é diferente, atualizar os dados
+                    if (existingApod.Title != nasaApod.Title)
+                    {
+                        _logger.LogInformation("Updating existing APOD with correct data from NASA API");
+                        existingApod.Title = nasaApod.Title;
+                        existingApod.Explanation = nasaApod.Explanation;
+                        existingApod.Url = nasaApod.Url;
+                        existingApod.HdUrl = nasaApod.HdUrl;
+                        existingApod.MediaType = nasaApod.MediaType;
+                        existingApod.Copyright = nasaApod.Copyright;
+                        existingApod.UpdatedAt = DateTime.UtcNow;
+
+                        var updatedApod = await _apodRepository.UpdateAsync(existingApod);
+                        var dto = _mapper.Map<ApodDto>(updatedApod);
+
+                        // Limpar cache para forçar reload
+                        var cacheKey = $"apod_{date:yyyy-MM-dd}";
+                        _cache.Remove(cacheKey);
+                        _cache.Set(cacheKey, dto, TimeSpan.FromHours(1));
+
+                        _logger.LogInformation("APOD updated for date: {Date}", date);
+                        return dto;
+                    }
+                    else
+                    {
+                        // Dados já estão corretos
+                        var dto = _mapper.Map<ApodDto>(existingApod);
+                        var cacheKey = $"apod_{date:yyyy-MM-dd}";
+                        _cache.Set(cacheKey, dto, TimeSpan.FromHours(1));
+                        return dto;
+                    }
+                }
+
+                // Criar novo registro
                 var apodEntity = new ApodEntity
                 {
                     Date = DateTime.Parse(nasaApod.Date),
@@ -126,14 +170,14 @@ namespace WeatherTrackerAPI.Services
                 };
 
                 var savedApod = await _apodRepository.CreateAsync(apodEntity);
-                var dto = _mapper.Map<ApodDto>(savedApod);
+                var newDto = _mapper.Map<ApodDto>(savedApod);
 
-                var cacheKey = $"apod_{date:yyyy-MM-dd}";
-                _cache.Set(cacheKey, dto, TimeSpan.FromHours(1));
+                var newCacheKey = $"apod_{date:yyyy-MM-dd}";
+                _cache.Set(newCacheKey, newDto, TimeSpan.FromHours(1));
 
                 _logger.LogInformation("APOD synced and stored for date: {Date}", date);
                 
-                return dto;
+                return newDto;
             }
             catch (Exception ex)
             {
