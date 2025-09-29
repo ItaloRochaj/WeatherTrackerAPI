@@ -54,8 +54,18 @@ namespace WeatherTrackerAPI.Controllers
         {
             try
             {
+                if (registerDto == null)
+                {
+                    _logger.LogWarning("Null registration data received");
+                    return BadRequest(new { message = "Dados de registro não fornecidos" });
+                }
+
+                _logger.LogInformation("Register attempt for email: {Email}", registerDto.Email);
+                
                 if (!ModelState.IsValid)
                 {
+                    _logger.LogWarning("Invalid model state for registration: {Errors}", 
+                        string.Join("; ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
                     return BadRequest(ModelState);
                 }
 
@@ -86,26 +96,8 @@ namespace WeatherTrackerAPI.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var result = await _authService.ValidateTokenAsync(validateTokenDto.Token);
-                
-                if (result)
-                {
-                    var response = new ValidateTokenResponseDto
-                    {
-                        IsValid = true,
-                        Message = "Token válido"
-                    };
-                    return Ok(response);
-                }
-                else
-                {
-                    var response = new ValidateTokenResponseDto
-                    {
-                        IsValid = false,
-                        Message = "Token inválido ou expirado"
-                    };
-                    return Ok(response);
-                }
+                var result = await _authService.ValidateTokenWithUserAsync(validateTokenDto);
+                return Ok(result);
             }
             catch (Exception ex)
             {

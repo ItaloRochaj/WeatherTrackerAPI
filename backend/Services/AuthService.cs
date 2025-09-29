@@ -15,6 +15,7 @@ namespace WeatherTrackerAPI.Services
         Task<LoginResponseDto> LoginAsync(LoginDto loginDto);
         Task<RegisterResponseDto> RegisterAsync(RegisterDto registerDto);
         Task<bool> ValidateTokenAsync(string token);
+        Task<ValidateTokenResponseDto> ValidateTokenWithUserAsync(ValidateTokenDto validateTokenDto);
         string GenerateJwtToken(User user);
     }
 
@@ -52,10 +53,15 @@ namespace WeatherTrackerAPI.Services
             return new LoginResponseDto
             {
                 Token = token,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Role = user.Role,
+                User = new UserDto
+                {
+                    Id = user.Id.ToString(),
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Role = user.Role,
+                    CreatedAt = user.CreatedAt ?? DateTime.UtcNow
+                },
                 ExpiresAt = expiresAt
             };
         }
@@ -116,6 +122,65 @@ namespace WeatherTrackerAPI.Services
             catch
             {
                 return Task.FromResult(false);
+            }
+        }
+
+        public async Task<ValidateTokenResponseDto> ValidateTokenWithUserAsync(ValidateTokenDto validateTokenDto)
+        {
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);
+
+                var principal = tokenHandler.ValidateToken(validateTokenDto.Token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidIssuer = _jwtSettings.Issuer,
+                    ValidateAudience = true,
+                    ValidAudience = _jwtSettings.Audience,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+
+                var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (userIdClaim != null && Guid.TryParse(userIdClaim, out var userId))
+                {
+                    var user = await _userRepository.GetByIdAsync(userId);
+                    if (user != null)
+                    {
+                        return new ValidateTokenResponseDto
+                        {
+                            IsValid = true,
+                            User = new UserDto
+                            {
+                                Id = user.Id.ToString(),
+                                Email = user.Email,
+                                FirstName = user.FirstName,
+                                LastName = user.LastName,
+                                Role = user.Role,
+                                CreatedAt = user.CreatedAt ?? DateTime.UtcNow
+                            },
+                            Message = "Token válido"
+                        };
+                    }
+                }
+
+                return new ValidateTokenResponseDto
+                {
+                    IsValid = false,
+                    Message = "Usuário não encontrado"
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Token validation failed");
+                return new ValidateTokenResponseDto
+                {
+                    IsValid = false,
+                    Message = "Token inválido"
+                };
             }
         }
 
