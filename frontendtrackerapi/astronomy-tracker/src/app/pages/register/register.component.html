@@ -6,6 +6,30 @@
     </div>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <!-- Profile Picture Upload -->
+      <div class="form-group profile-picture-group">
+        <label>Profile Picture</label>
+        <div class="profile-picture-upload">
+          <div class="profile-preview" (click)="triggerFileInput()">
+            <img *ngIf="profilePicturePreview" [src]="profilePicturePreview" alt="Profile Preview" class="preview-image">
+            <div *ngIf="!profilePicturePreview" class="upload-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>Add Photo</span>
+            </div>
+          </div>
+          <input
+            type="file"
+            #fileInput
+            accept="image/*"
+            (change)="onFileSelected($event)"
+            style="display: none;"
+          >
+          <p class="upload-hint">Click to upload a profile picture (optional)</p>
+        </div>
+      </div>
       <div class="form-row">
         <div class="form-group">
           <label for="firstName">First Name</label>
@@ -91,8 +115,8 @@
         {{ errorMessage }}
       </div>
 
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         class="register-btn"
         [disabled]="registerForm.invalid || isLoading"
       >
