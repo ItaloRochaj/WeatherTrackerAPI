@@ -77,6 +77,7 @@ export class AstronomyService {
         date: '2025-10-15',
         type: 'meteor_shower',
         visibility: 'Worldwide',
+        duration: '2-3 hours',
         imageUrl: 'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=400&h=300&fit=crop'
       },
       {
@@ -86,6 +87,7 @@ export class AstronomyService {
         date: '2025-11-08',
         type: 'lunar_eclipse',
         visibility: 'Americas, Europe',
+        duration: '3.5 hours',
         imageUrl: 'https://images.unsplash.com/photo-1518066000-e95de0088e28?w=400&h=300&fit=crop'
       },
       {
@@ -95,6 +97,7 @@ export class AstronomyService {
         date: '2025-12-20',
         type: 'planetary_alignment',
         visibility: 'Global',
+        duration: 'All night',
         imageUrl: 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=300&fit=crop'
       }
     ];
