@@ -3,9 +3,9 @@ import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular
 import { Observable, throwError, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { 
-  ApodDto, 
-  ApodTrendDto, 
+import {
+  ApodDto,
+  ApodTrendDto,
   RatingDto,
   HealthResponse
 } from '../models/astronomy.models';
@@ -35,9 +35,9 @@ export class WeatherTrackerApiService {
       params = params.set('date', date);
     }
 
-    return this.http.get<ApodDto>(`${this.baseUrl}/nasa/apod`, { 
-      params, 
-      headers: this.getHeaders() 
+    return this.http.get<ApodDto>(`${this.baseUrl}/nasa/apod`, {
+      params,
+      headers: this.getHeaders()
     }).pipe(
       retry(2),
       catchError((error) => {
@@ -96,7 +96,7 @@ export class WeatherTrackerApiService {
   // Rating and Favorites
   updateRating(id: string, rating: number): Observable<ApodDto> {
     const ratingData: RatingDto = { rating };
-    
+
     return this.http.put<ApodDto>(`${this.baseUrl}/nasa/apod/${id}/rating`, ratingData, {
       headers: this.getHeaders()
     }).pipe(
@@ -133,7 +133,7 @@ export class WeatherTrackerApiService {
   // Sync from NASA
   syncApodFromNasa(date: string): Observable<ApodDto> {
     const params = new HttpParams().set('date', date);
-    
+
     return this.http.post<ApodDto>(`${this.baseUrl}/nasa/apod/sync`, null, {
       params,
       headers: this.getHeaders()
@@ -235,7 +235,7 @@ export class WeatherTrackerApiService {
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
-    
+
     if (error.error instanceof ErrorEvent) {
       // Client-side error
       errorMessage = `Error: ${error.error.message}`;
@@ -257,7 +257,7 @@ export class WeatherTrackerApiService {
         errorMessage = error.error?.message || `Error Code: ${error.status}`;
       }
     }
-    
+
     console.error('Astronomy Service Error:', errorMessage);
     return throwError(() => errorMessage);
   }
