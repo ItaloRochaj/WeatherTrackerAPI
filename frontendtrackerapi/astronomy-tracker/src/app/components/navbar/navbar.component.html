@@ -40,7 +40,14 @@
         <div class="user-menu-container" *ngIf="isAuthenticated">
           <button class="user-profile-btn" (click)="toggleUserMenu()">
             <div class="user-avatar">
-              {{ currentUser?.firstName?.charAt(0) }}{{ currentUser?.lastName?.charAt(0) }}
+              <img *ngIf="currentUser?.profilePicture && !imageLoadError"
+                   [src]="currentUser!.profilePicture"
+                   [alt]="(currentUser?.firstName || '') + ' ' + (currentUser?.lastName || '')"
+                   class="avatar-image"
+                   (error)="imageLoadError = true">
+              <span *ngIf="!currentUser?.profilePicture || imageLoadError" class="avatar-initials">
+                {{ currentUser?.firstName?.charAt(0) }}{{ currentUser?.lastName?.charAt(0) }}
+              </span>
             </div>
             <span class="user-name">{{ currentUser?.firstName }}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -51,12 +58,29 @@
           <!-- User Dropdown Menu -->
           <div class="user-dropdown" [class.show]="showUserMenu">
             <div class="user-info">
+              <div class="user-avatar-large">
+                <img *ngIf="currentUser?.profilePicture && !imageLoadError"
+                     [src]="currentUser!.profilePicture"
+                     [alt]="(currentUser?.firstName || '') + ' ' + (currentUser?.lastName || '')"
+                     class="avatar-image-large"
+                     (error)="imageLoadError = true">
+                <span *ngIf="!currentUser?.profilePicture || imageLoadError" class="avatar-initials-large">
+                  {{ currentUser?.firstName?.charAt(0) }}{{ currentUser?.lastName?.charAt(0) }}
+                </span>
+              </div>
               <div class="user-details">
-                <div class="user-full-name">{{ currentUser?.fullName }}</div>
+                <div class="user-full-name">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</div>
                 <div class="user-email">{{ currentUser?.email }}</div>
               </div>
             </div>
             <div class="dropdown-divider"></div>
+            <button class="dropdown-item profile-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              View Profile
+            </button>
             <button class="dropdown-item" (click)="logout()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>

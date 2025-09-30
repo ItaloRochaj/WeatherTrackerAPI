@@ -19,6 +19,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   searchQuery = '';
   currentUser: UserDto | null = null;
   showUserMenu = false;
+  imageLoadError = false;
   private userSubscription: Subscription = new Subscription();
 
   constructor(
@@ -29,6 +30,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.userSubscription = this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
+      this.imageLoadError = false; // Reset error when user changes
     });
   }
 
