@@ -12,6 +12,7 @@ import { CelestialEvent } from '../../models/astronomy';
 export class EventsComponent implements OnInit {
   events: CelestialEvent[] = [];
   error: string | null = null;
+  loading: boolean = false;
 
   constructor(private astronomyService: AstronomyService) {}
 
@@ -20,14 +21,17 @@ export class EventsComponent implements OnInit {
   }
 
   loadEvents(): void {
+    this.loading = true;
     this.error = null;
 
     this.astronomyService.getMockEvents().subscribe({
       next: (data) => {
         this.events = data;
+        this.loading = false;
       },
       error: (err) => {
         this.error = 'Failed to load events. Please try again.';
+        this.loading = false;
         console.error('Error loading events:', err);
       }
     });
@@ -91,5 +95,37 @@ export class EventsComponent implements OnInit {
 
   retry(): void {
     this.loadEvents();
+  }
+
+  refreshEvents(): void {
+    this.loadEvents();
+  }
+
+  getEventTypeColor(type: string): string {
+    const colorMap: { [key: string]: string } = {
+      'meteor_shower': '#ff6b6b',
+      'lunar_eclipse': '#4ecdc4',
+      'planetary_alignment': '#45b7d1',
+      'solar_eclipse': '#f39c12',
+      'other': '#95a5a6'
+    };
+    return colorMap[type] || colorMap['other'];
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+
+  getDaysUntil(dateString: string): number {
+    const eventDate = new Date(dateString);
+    const now = new Date();
+    const diffTime = eventDate.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.max(0, diffDays);
   }
 }
