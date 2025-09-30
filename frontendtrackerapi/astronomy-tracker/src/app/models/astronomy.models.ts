@@ -54,6 +54,7 @@ export interface RegisterDto {
   password: string;
   firstName: string;
   lastName: string;
+  profilePicture?: string;
 }
 
 export interface RegisterResponseDto {
@@ -61,6 +62,7 @@ export interface RegisterResponseDto {
   email: string;
   firstName: string;
   lastName: string;
+  profilePicture?: string;
   createdAt: string;
 }
 
@@ -70,6 +72,7 @@ export interface UserDto {
   firstName: string;
   lastName: string;
   fullName: string;
+  profilePicture?: string;
   role: string;
   createdAt: string;
 }
