@@ -3,14 +3,14 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { 
-  LoginDto, 
-  LoginResponseDto, 
-  RegisterDto, 
+import {
+  LoginDto,
+  LoginResponseDto,
+  RegisterDto,
   RegisterResponseDto,
   ValidateTokenDto,
   ValidateTokenResponseDto,
-  UserDto 
+  UserDto
 } from '../models/astronomy.models';
 
 @Injectable({
@@ -28,7 +28,7 @@ export class AuthService {
     // Check for existing token on init
     const token = localStorage.getItem('auth_token');
     const user = localStorage.getItem('current_user');
-    
+
     if (token && user) {
       this.tokenSubject.next(token);
       this.currentUserSubject.next(JSON.parse(user));
@@ -51,10 +51,24 @@ export class AuthService {
     return this.http.post<LoginResponseDto>(`${this.baseUrl}/auth/login`, credentials)
       .pipe(
         tap(response => {
+          // Check if we have a temporary profile picture saved during registration
+          const tempProfilePicture = localStorage.getItem('temp_profile_picture');
+          const tempUserEmail = localStorage.getItem('temp_user_email');
+
+          if (tempProfilePicture && tempUserEmail === credentials.email) {
+            // Add the profile picture to the user object if it's missing
+            if (!response.user.profilePicture) {
+              response.user.profilePicture = tempProfilePicture;
+            }
+            // Clean up temp storage
+            localStorage.removeItem('temp_profile_picture');
+            localStorage.removeItem('temp_user_email');
+          }
+
           // Store token and user info
           localStorage.setItem('auth_token', response.token);
           localStorage.setItem('current_user', JSON.stringify(response.user));
-          
+
           this.tokenSubject.next(response.token);
           this.currentUserSubject.next(response.user);
         }),
@@ -63,6 +77,12 @@ export class AuthService {
   }
 
   register(userData: RegisterDto): Observable<RegisterResponseDto> {
+    // Temporarily save profile picture in localStorage for testing
+    if (userData.profilePicture) {
+      localStorage.setItem('temp_profile_picture', userData.profilePicture);
+      localStorage.setItem('temp_user_email', userData.email);
+    }
+
     return this.http.post<RegisterResponseDto>(`${this.baseUrl}/auth/register`, userData)
       .pipe(
         catchError(this.handleError)
@@ -81,7 +101,7 @@ export class AuthService {
     // Remove stored data
     localStorage.removeItem('auth_token');
     localStorage.removeItem('current_user');
-    
+
     // Update subjects
     this.tokenSubject.next(null);
     this.currentUserSubject.next(null);
@@ -103,7 +123,7 @@ export class AuthService {
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
-    
+
     if (error.error instanceof ErrorEvent) {
       // Client-side error
       errorMessage = `Error: ${error.error.message}`;
@@ -121,7 +141,7 @@ export class AuthService {
         errorMessage = error.error?.message || `Error Code: ${error.status}`;
       }
     }
-    
+
     console.error('Auth Service Error:', errorMessage);
     return throwError(() => errorMessage);
   }
