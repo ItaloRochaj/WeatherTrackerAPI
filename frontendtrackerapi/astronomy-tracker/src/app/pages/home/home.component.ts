@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 import { HeroComponent } from '../../components/hero/hero.component';
 import { AstronomyTodayComponent } from '../../components/astronomy-today/astronomy-today.component';
-import { CelestialEventsComponent } from '../../components/celestial-events/celestial-events.component';
 import { HistoricalDataComponent } from '../../components/historical-data/historical-data.component';
+import { AuthCtaComponent } from '../../components/auth-cta/auth-cta.component';
 
 @Component({
   selector: 'app-home',
   imports: [
     HeroComponent,
     AstronomyTodayComponent,
-    CelestialEventsComponent,
-    HistoricalDataComponent
+    HistoricalDataComponent,
+    AuthCtaComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
