@@ -1,0 +1,34 @@
+<section class="auth-cta" *ngIf="!isAuthenticated">
+  <div class="container">
+    <div class="cta-card">
+      <div class="cta-content">
+        <div class="cta-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="m12 2-3 10-3-10a1 1 0 0 1 6 0Z"></path>
+            <path d="m12 22 3-10 3 10a1 1 0 0 1-6 0Z"></path>
+            <path d="m20 12-8-2 8-2a1 1 0 0 1 0 4Z"></path>
+            <path d="m4 12 8 2-8 2a1 1 0 0 1 0-4Z"></path>
+          </svg>
+        </div>
+        <div class="cta-text">
+          <h2>Join our cosmic community</h2>
+          <p>Create an account to save favorites, rate images, and track your astronomy journey</p>
+        </div>
+        <div class="cta-buttons">
+          <button class="btn btn-cta-primary" (click)="navigateToRegister()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="m22 2-5 10-3-3-3 5"></path>
+            </svg>
+            Start Your Journey
+          </button>
+          <button class="btn btn-cta-secondary" (click)="navigateToLogin()">
+            Already have an account? Sign In
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
