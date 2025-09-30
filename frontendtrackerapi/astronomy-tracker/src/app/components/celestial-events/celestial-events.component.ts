@@ -6,12 +6,14 @@ import { CelestialEvent } from '../../models/astronomy';
 
 @Component({
   selector: 'app-celestial-events',
+  standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './celestial-events.component.html',
   styleUrl: './celestial-events.component.scss'
 })
 export class CelestialEventsComponent implements OnInit {
   events: CelestialEvent[] = [];
+  loading: boolean = false;
   error: string | null = null;
 
   constructor(private astronomyService: AstronomyService) {}
@@ -21,66 +23,47 @@ export class CelestialEventsComponent implements OnInit {
   }
 
   loadEvents(): void {
+    this.loading = true;
     this.error = null;
 
     this.astronomyService.getMockEvents().subscribe({
       next: (data) => {
-        this.events = data;
+        // Show only the next 3 upcoming events for the home page
+        this.events = data.slice(0, 3);
+        this.loading = false;
       },
       error: (err) => {
-        this.error = 'Failed to load events. Please try again.';
+        this.error = 'Failed to load events';
+        this.loading = false;
         console.error('Error loading events:', err);
       }
     });
   }
 
-  getEventImage(type: string): string {
-    // URLs de fallback usando imagens públicas
-    const fallbackImageMap: { [key: string]: string } = {
-      'meteor_shower': 'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=400&h=300&fit=crop',
-      'lunar_eclipse': 'https://images.unsplash.com/photo-1518066000-e95de0088e28?w=400&h=300&fit=crop',
-      'planetary_alignment': 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=300&fit=crop',
-      'solar_eclipse': 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop',
-      'other': 'https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=400&h=300&fit=crop'
+  getEventTypeColor(type: string): string {
+    const colorMap: { [key: string]: string } = {
+      'meteor_shower': '#ff6b6b',
+      'lunar_eclipse': '#4ecdc4',
+      'planetary_alignment': '#45b7d1',
+      'solar_eclipse': '#f39c12',
+      'other': '#95a5a6'
     };
-
-    return fallbackImageMap[type] || fallbackImageMap['other'];
+    return colorMap[type] || colorMap['other'];
   }
 
-  getEventTypeLabel(type: string): string {
-    const labelMap: { [key: string]: string } = {
-      'meteor_shower': 'Meteor Shower',
-      'lunar_eclipse': 'Lunar Eclipse',
-      'planetary_alignment': 'Planetary Alignment',
-      'solar_eclipse': 'Solar Eclipse',
-      'other': 'Celestial Event'
-    };
-
-    return labelMap[type] || labelMap['other'];
-  }
-
-  formatEventDate(dateString: string): string {
+  formatDate(dateString: string): string {
     const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = date.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) {
-      return 'Today';
-    } else if (diffDays === 1) {
-      return 'Tomorrow';
-    } else if (diffDays > 0) {
-      return `In ${diffDays} days`;
-    } else {
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      });
-    }
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric'
+    });
   }
 
-  retry(): void {
-    this.loadEvents();
+  getDaysUntil(dateString: string): number {
+    const eventDate = new Date(dateString);
+    const now = new Date();
+    const diffTime = eventDate.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.max(0, diffDays);
   }
 }
