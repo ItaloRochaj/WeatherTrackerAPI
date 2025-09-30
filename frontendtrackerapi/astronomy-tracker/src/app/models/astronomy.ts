@@ -16,6 +16,7 @@ export interface CelestialEvent {
   date: string;
   type: 'meteor_shower' | 'lunar_eclipse' | 'planetary_alignment' | 'solar_eclipse' | 'other';
   visibility: string;
+  duration: string;
   imageUrl?: string;
 }
 
