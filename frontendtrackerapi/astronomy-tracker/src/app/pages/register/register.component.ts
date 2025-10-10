@@ -19,6 +19,8 @@ export class RegisterComponent {
   successMessage = '';
   profilePicturePreview: string | null = null;
   selectedFile: File | null = null;
+  hidePassword = true;
+  hideConfirmPassword = true;
 
   constructor(
     private fb: FormBuilder,
