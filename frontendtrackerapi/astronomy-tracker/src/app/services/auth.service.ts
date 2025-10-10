@@ -121,6 +121,50 @@ export class AuthService {
     };
   }
 
+  // Method to change user password
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    const payload = {
+      oldPassword: oldPassword,
+      newPassword: newPassword
+    };
+
+    return this.http.post<any>(`${this.baseUrl}/auth/change-password`, payload, {
+      headers: {
+        'Authorization': `Bearer ${this.tokenValue}`,
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Method to update profile picture
+  updateProfilePicture(profilePicture: string): Observable<any> {
+    const currentUser = this.currentUserValue;
+    if (!currentUser) {
+      return throwError(() => new Error('User not authenticated'));
+    }
+
+    // Update the user object with the new profile picture
+    const updatedUser = {
+      ...currentUser,
+      profilePicture
+    };
+
+    // In a real app, this would send the updated profile picture to the server
+    // For now, we'll just update the local storage and the subject
+    localStorage.setItem('current_user', JSON.stringify(updatedUser));
+    this.currentUserSubject.next(updatedUser);
+
+    // Return a mock success response
+    return new Observable(observer => {
+      setTimeout(() => {
+        observer.next({ success: true, message: 'Profile picture updated successfully' });
+        observer.complete();
+      }, 500);
+    });
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
 
@@ -143,6 +187,6 @@ export class AuthService {
     }
 
     console.error('Auth Service Error:', errorMessage);
-    return throwError(() => errorMessage);
+    return throwError(() => error);
   }
 }
