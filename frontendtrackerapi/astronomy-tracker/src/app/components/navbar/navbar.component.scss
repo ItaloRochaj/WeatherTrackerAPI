@@ -692,11 +692,50 @@
         .field-value {
           width: 100%;
           padding: 0.75rem 1rem;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 12px;
-          background: rgba(255, 255, 255, 0.05);
-          color: #ffffff;
+          border: none;
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.03);
+          color: rgba(255, 255, 255, 0.9);
           font-size: 0.95rem;
+          pointer-events: none; /* Indica que não é interativo */
+
+          &.readonly-field {
+            position: relative;
+            font-style: normal;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            &::after {
+              content: '';
+              position: absolute;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              height: 1px;
+              background: linear-gradient(90deg,
+                rgba(255, 255, 255, 0.05),
+                rgba(255, 255, 255, 0.15),
+                rgba(255, 255, 255, 0.05));
+            }
+
+            .readonly-icon {
+              opacity: 0.5;
+              color: rgba(255, 255, 255, 0.6);
+              margin-left: 8px;
+              display: flex;
+              align-items: center;
+              transition: all 0.3s ease;
+
+              &:hover {
+                opacity: 0.8;
+              }
+
+              svg {
+                filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
+              }
+            }
+          }
         }
       }
     }
