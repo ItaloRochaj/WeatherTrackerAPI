@@ -1,10 +1,20 @@
 .register-container {
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: center; /* Voltamos para center para centralizar verticalmente */
   justify-content: center;
   background: linear-gradient(135deg, #0a0e1a 0%, #1a1f35 50%, #2d3561 100%);
   padding: 1rem;
+  overflow-y: auto; /* Permitir rolagem vertical quando necessário */
+
+  /* Adicionamos padding vertical negativo para compensar a centralização perfeita */
+  padding-bottom: 1.5rem;
+  padding-top: 0.5rem;
+
+  @media (max-height: 700px) {
+    align-items: flex-start; /* Em telas muito pequenas, alinhamos ao topo */
+    padding-top: 1rem;
+  }
 }
 
 .register-card {
@@ -12,53 +22,65 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
-  padding: 2.5rem;
-  max-width: 500px;
+  padding: 2rem 1.8rem;
+  max-width: 450px;
   width: 100%;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  margin-top: 84px;
+
+  /* Ajusta o espaçamento para diferentes tamanhos de tela */
+  @media (max-height: 800px) {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-height: 700px) {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
 }
 
 .register-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 
   h1 {
     color: #ffffff;
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+    margin-bottom: 0.4rem;
     font-weight: 600;
   }
 
   p {
     color: rgba(255, 255, 255, 0.7);
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 }
 
 .register-form {
   .profile-picture-group {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     text-align: center;
 
     label {
       display: block;
       color: #ffffff;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 500;
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
     }
   }
 
   .profile-picture-upload {
     .profile-preview {
-      width: 120px;
-      height: 120px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       border: 3px dashed rgba(255, 255, 255, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 1rem;
+      margin: 0 auto 0.7rem;
       cursor: pointer;
       transition: all 0.3s ease;
       overflow: hidden;
@@ -103,24 +125,24 @@
   .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
 
     @media (max-width: 480px) {
       grid-template-columns: 1fr;
-      gap: 1.5rem;
+      gap: 1rem;
     }
   }
 
   .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 
     label {
       display: block;
       color: #ffffff;
       font-weight: 500;
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+      font-size: 0.85rem;
     }
 
     .password-input-container {
@@ -181,13 +203,13 @@
 
     input {
       width: 100%;
-      padding: 0.875rem 1rem;
-      padding-right: 50px; // Aumentar o padding direito para dar espaço ao ícone
+      padding: 0.75rem 1rem;
+      padding-right: 45px; // Aumentar o padding direito para dar espaço ao ícone
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 12px;
       background: rgba(255, 255, 255, 0.05);
       color: #ffffff;
-      font-size: 1rem;
+      font-size: 0.95rem;
       transition: all 0.3s ease;
 
       &::placeholder {
@@ -211,9 +233,9 @@
 
 .error-message {
   color: #ff6b6b;
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  margin-bottom: 0.6rem;
 
   span {
     display: block;
@@ -222,9 +244,9 @@
 
 .success-message {
   color: #4caf50;
-  font-size: 0.875rem;
-  margin-bottom: 1rem;
-  padding: 0.75rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.6rem;
+  padding: 0.5rem;
   background: rgba(76, 175, 80, 0.1);
   border: 1px solid rgba(76, 175, 80, 0.3);
   border-radius: 8px;
@@ -233,19 +255,19 @@
 
 .register-btn {
   width: 100%;
-  padding: 0.875rem 1rem;
+  padding: 0.75rem 1rem;
   background: linear-gradient(45deg, #4a90e2, #357abd);
   color: white;
   border: none;
   border-radius: 12px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
 
   &:hover:not(:disabled) {
     transform: translateY(-2px);
@@ -270,13 +292,13 @@
 
 .register-footer {
   text-align: center;
-  margin-top: 2rem;
-  padding-top: 2rem;
+  margin-top: 1.2rem;
+  padding-top: 1.2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 
   p {
     color: rgba(255, 255, 255, 0.7);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 
     a {
       color: #4a90e2;
