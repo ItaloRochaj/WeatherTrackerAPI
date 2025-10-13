@@ -144,6 +144,44 @@
     display: flex;
     align-items: center;
     gap: 10px;
+
+    a {
+      color: #b8c5d6; /* Mesma cor do texto do email */
+      text-decoration: none;
+      position: relative;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        color: #ffffff; /* Branco ao passar o mouse */
+      }
+
+      &:active {
+        color: #a0b0c5; /* Cor mais escura ao clicar */
+      }
+    }
+  }
+  
+  .linkedin-link {
+    .linkedin-icon {
+      color: #b8c5d6; /* Mesma cor do texto do email */
+      margin-right: 6px;
+      transition: transform 0.3s ease;
+    }
+    
+    &:hover .linkedin-icon {
+      transform: scale(1.15);
+      color: #ffffff; /* Branco ao passar o mouse */
+    }
+  }
+  
+  .portfolio-link a {
+    color: #b8c5d6; /* Mesma cor do texto do email */
+    font-weight: normal;
+    
+    &:hover {
+      color: #ffffff; /* Branco ao passar o mouse */
+      text-decoration: none;
+    }
   }
 }
 
