@@ -88,7 +88,7 @@ export class AstronomyService {
         type: 'lunar_eclipse',
         visibility: 'Americas, Europe',
         duration: '3.5 hours',
-        imageUrl: 'https://images.unsplash.com/photo-1518066000-e95de0088e28?w=400&h=300&fit=crop'
+        imageUrl: 'https://unsplash.com/pt-br/fotografias/solar-eclipse-7YiZKj9A3DM'
       },
       {
         id: '3',
@@ -98,7 +98,7 @@ export class AstronomyService {
         type: 'planetary_alignment',
         visibility: 'Global',
         duration: 'All night',
-        imageUrl: 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=300&fit=crop'
+        imageUrl: 'https://unsplash.com/pt-br/fotografias/tres-circulos-de-cores-diferentes-em-um-fundo-preto-lJu79_jOnTM'
       }
     ];
     return of(mockEvents);

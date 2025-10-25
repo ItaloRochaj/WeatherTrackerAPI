@@ -50,8 +50,8 @@ export class EventsComponent implements OnInit {
     // URLs de fallback usando imagens públicas
     const fallbackImageMap: { [key: string]: string } = {
       'meteor_shower': 'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=400&h=300&fit=crop',
-      'lunar_eclipse': 'https://images.unsplash.com/photo-1518066000-e95de0088e28?w=400&h=300&fit=crop',
-      'planetary_alignment': 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=300&fit=crop',
+      'lunar_eclipse': 'https://unsplash.com/pt-br/fotografias/solar-eclipse-7YiZKj9A3DM',
+      'planetary_alignment': 'https://unsplash.com/pt-br/fotografias/tres-circulos-de-cores-diferentes-em-um-fundo-preto-lJu79_jOnTM',
       'solar_eclipse': 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop',
       'other': 'https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=400&h=300&fit=crop'
     };
