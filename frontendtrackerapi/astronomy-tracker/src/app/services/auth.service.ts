@@ -33,7 +33,15 @@ export class AuthService {
 
     if (token && user) {
       this.tokenSubject.next(token);
-      this.currentUserSubject.next(JSON.parse(user));
+      // Merge a persisted profile picture stored by email
+      const parsedUser: UserDto = JSON.parse(user);
+      const savedPic = localStorage.getItem(`profile_picture:${parsedUser.email}`);
+      const mergedUser = savedPic && !parsedUser.profilePicture
+        ? { ...parsedUser, profilePicture: savedPic }
+        : parsedUser;
+      this.currentUserSubject.next(mergedUser);
+      // Keep storage in sync if we merged
+      localStorage.setItem('current_user', JSON.stringify(mergedUser));
     }
   }
 
@@ -67,6 +75,12 @@ export class AuthService {
             localStorage.removeItem('temp_user_email');
           }
 
+          // Also try to restore a previously saved profile picture for this email
+          const persistedPic = localStorage.getItem(`profile_picture:${response.user.email}`);
+          if (persistedPic && !response.user.profilePicture) {
+            response.user.profilePicture = persistedPic;
+          }
+
           // Store token and user info
           localStorage.setItem('auth_token', response.token);
           localStorage.setItem('current_user', JSON.stringify(response.user));
@@ -83,6 +97,8 @@ export class AuthService {
     if (userData.profilePicture) {
       localStorage.setItem('temp_profile_picture', userData.profilePicture);
       localStorage.setItem('temp_user_email', userData.email);
+      // Persist by-email so it survives logout/login
+      localStorage.setItem(`profile_picture:${userData.email}`, userData.profilePicture);
     }
 
     return this.http.post<RegisterResponseDto>(`${this.baseUrl}/auth/register`, userData)
@@ -141,7 +157,7 @@ export class AuthService {
   }
 
   // Method to update profile picture
-  updateProfilePicture(profilePicture: string): Observable<any> {
+  updateProfilePicture(profilePicture: string): Observable<UserDto> {
     const currentUser = this.currentUserValue;
     if (!currentUser) {
       return throwError(() => new Error('User not authenticated'));
@@ -153,18 +169,23 @@ export class AuthService {
       profilePicture
     };
 
-    // In a real app, this would send the updated profile picture to the server
-    // For now, we'll just update the local storage and the subject
-    localStorage.setItem('current_user', JSON.stringify(updatedUser));
-    this.currentUserSubject.next(updatedUser);
+    // Persist by-email so it survives logout/login cycles (fallback if backend not reachable)
+    localStorage.setItem(`profile_picture:${currentUser.email}`, profilePicture);
 
-    // Return a mock success response
-    return new Observable(observer => {
-      setTimeout(() => {
-        observer.next({ success: true, message: 'Profile picture updated successfully' });
-        observer.complete();
-      }, 500);
-    });
+    // Call backend to persist in database and sync local state
+    return this.http.put<UserDto>(`${this.baseUrl}/auth/profile-picture`, { profilePicture }, {
+      headers: {
+        'Authorization': `Bearer ${this.tokenValue}`,
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      tap((serverUser: UserDto) => {
+        const merged = { ...updatedUser, ...serverUser };
+        localStorage.setItem('current_user', JSON.stringify(merged));
+        this.currentUserSubject.next(merged);
+      }),
+      catchError(this.handleError)
+    );
   }
 
   // Password Reset Methods

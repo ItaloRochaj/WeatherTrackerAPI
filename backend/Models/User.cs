@@ -41,6 +41,10 @@ public class User
     
     [Column(TypeName = "datetime")]
     public DateTime? UpdatedAt { get; set; }
+
+    // Optional user profile picture (can store a data URL or external URL)
+    [Column(TypeName = "nvarchar(max)")]
+    public string? ProfilePicture { get; set; }
     
     [MaxLength(100)]
     [Column(TypeName = "nvarchar(100)")]

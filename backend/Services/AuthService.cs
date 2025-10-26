@@ -53,6 +53,7 @@ namespace WeatherTrackerAPI.Services
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
+                    ProfilePicture = user.ProfilePicture,
                     Role = user.Role,
                     CreatedAt = user.CreatedAt ?? DateTime.UtcNow
                 },
@@ -73,6 +74,7 @@ namespace WeatherTrackerAPI.Services
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
                 FirstName = registerDto.FirstName,
                 LastName = registerDto.LastName,
+                ProfilePicture = registerDto.ProfilePicture,
                 Role = "User",
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
@@ -88,6 +90,7 @@ namespace WeatherTrackerAPI.Services
                 Email = createdUser.Email,
                 FirstName = createdUser.FirstName,
                 LastName = createdUser.LastName,
+                ProfilePicture = createdUser.ProfilePicture,
                 CreatedAt = createdUser.CreatedAt
             };
         }
@@ -153,6 +156,7 @@ namespace WeatherTrackerAPI.Services
                                 Email = user.Email,
                                 FirstName = user.FirstName,
                                 LastName = user.LastName,
+                                ProfilePicture = user.ProfilePicture,
                                 Role = user.Role,
                                 CreatedAt = user.CreatedAt ?? DateTime.UtcNow
                             },
@@ -275,6 +279,26 @@ namespace WeatherTrackerAPI.Services
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public async Task<UserDto> UpdateProfilePictureAsync(Guid userId, string profilePicture)
+        {
+            var user = await _userRepository.GetByIdAsync(userId) 
+                       ?? throw new InvalidOperationException("Usuário não encontrado");
+
+            user.ProfilePicture = profilePicture;
+            await _userRepository.UpdateAsync(user);
+
+            return new UserDto
+            {
+                Id = user.Id.ToString(),
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                ProfilePicture = user.ProfilePicture,
+                Role = user.Role,
+                CreatedAt = user.CreatedAt ?? DateTime.UtcNow
+            };
         }
     }
 }

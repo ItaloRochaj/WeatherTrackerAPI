@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using WeatherTrackerAPI.DTOs;
 using WeatherTrackerAPI.Services;
 
@@ -16,6 +18,35 @@ namespace WeatherTrackerAPI.Controllers
         {
             _authService = authService;
             _logger = logger;
+        }
+
+        [Authorize]
+        [HttpPut("profile-picture")]
+        [ProducesResponseType(typeof(UserDto), 200)]
+        [ProducesResponseType(typeof(object), 400)]
+        public async Task<IActionResult> UpdateProfilePicture([FromBody] UpdateProfilePictureDto dto)
+        {
+            try
+            {
+                if (dto == null || string.IsNullOrWhiteSpace(dto.ProfilePicture))
+                {
+                    return BadRequest(new { message = "Imagem de perfil inválida" });
+                }
+
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+                {
+                    return Unauthorized(new { message = "Usuário não autenticado" });
+                }
+
+                var updated = await _authService.UpdateProfilePictureAsync(userId, dto.ProfilePicture);
+                return Ok(updated);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao atualizar imagem de perfil");
+                return StatusCode(500, new { message = "Erro interno do servidor" });
+            }
         }
 
         [HttpPost("login")]

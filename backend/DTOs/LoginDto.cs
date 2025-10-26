@@ -27,6 +27,7 @@ namespace WeatherTrackerAPI.DTOs
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string FullName => $"{FirstName} {LastName}";
+        public string? ProfilePicture { get; set; }
         public string Role { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
     }

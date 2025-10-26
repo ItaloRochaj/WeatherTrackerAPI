@@ -21,6 +21,9 @@ namespace WeatherTrackerAPI.DTOs
         [MinLength(2, ErrorMessage = "Sobrenome deve ter pelo menos 2 caracteres")]
         [MaxLength(100, ErrorMessage = "Sobrenome deve ter no máximo 100 caracteres")]
         public string LastName { get; set; } = string.Empty;
+
+        // Optional profile picture (data URL or external URL)
+        public string? ProfilePicture { get; set; }
     }
 
     public class RegisterResponseDto
@@ -29,6 +32,7 @@ namespace WeatherTrackerAPI.DTOs
         public string Email { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+        public string? ProfilePicture { get; set; }
         public DateTime? CreatedAt { get; set; }
         public string Message { get; set; } = "Usuário criado com sucesso!";
     }

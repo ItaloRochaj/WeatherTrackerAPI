@@ -10,5 +10,6 @@ namespace WeatherTrackerAPI.Services
         Task<ForgotPasswordResponseDto> ForgotPasswordAsync(string email);
         Task<ResetPasswordResponseDto> ResetPasswordAsync(ResetPasswordDto resetPasswordDto);
         Task<bool> ValidateResetTokenAsync(string token);
+        Task<UserDto> UpdateProfilePictureAsync(Guid userId, string profilePicture);
     }
 }
