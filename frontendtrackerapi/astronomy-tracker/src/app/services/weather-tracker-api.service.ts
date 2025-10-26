@@ -3,12 +3,12 @@ import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular
 import { Observable, throwError, of } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { 
-  ApodDto, 
-  RatingDto, 
-  LoginDto, 
-  RegisterDto, 
-  ApodTrendDto, 
+import {
+  ApodDto,
+  RatingDto,
+  LoginDto,
+  RegisterDto,
+  ApodTrendDto,
   HealthResponse,
   ForgotPasswordDto,
   ForgotPasswordResponseDto,

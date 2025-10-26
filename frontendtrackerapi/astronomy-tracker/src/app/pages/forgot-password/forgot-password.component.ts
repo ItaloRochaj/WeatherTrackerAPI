@@ -13,10 +13,10 @@ import { Router, RouterModule } from '@angular/router';
       <div class="auth-card">
         <h1>Reset Password</h1>
         <div class="stars-bg"></div>
-        
+
         <div *ngIf="!emailSent" class="form-container">
           <p class="description">Enter your email address and we'll send you a link to reset your password.</p>
-          
+
           <div class="form-group">
             <input
               type="email"
@@ -29,8 +29,8 @@ import { Router, RouterModule } from '@angular/router';
 
           <div class="error-message" *ngIf="error">{{ error }}</div>
 
-          <button 
-            class="submit-btn" 
+          <button
+            class="submit-btn"
             (click)="onSubmit()"
             [disabled]="isLoading"
           >

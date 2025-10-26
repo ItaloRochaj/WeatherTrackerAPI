@@ -20,10 +20,10 @@ import { AuthService } from '../../services/auth.service';
         <form [formGroup]="resetPasswordForm" (ngSubmit)="onSubmit()" class="form">
           <div class="form-field">
             <label for="newPassword">New Password</label>
-            <input 
-              type="password" 
+            <input
+              type="password"
               id="newPassword"
-              formControlName="newPassword" 
+              formControlName="newPassword"
               required
               [class.error]="resetPasswordForm.get('newPassword')?.invalid && resetPasswordForm.get('newPassword')?.touched"
             >
@@ -39,10 +39,10 @@ import { AuthService } from '../../services/auth.service';
 
           <div class="form-field">
             <label for="confirmPassword">Confirm Password</label>
-            <input 
-              type="password" 
+            <input
+              type="password"
               id="confirmPassword"
-              formControlName="confirmPassword" 
+              formControlName="confirmPassword"
               required
               [class.error]="resetPasswordForm.get('confirmPassword')?.invalid && resetPasswordForm.get('confirmPassword')?.touched"
             >

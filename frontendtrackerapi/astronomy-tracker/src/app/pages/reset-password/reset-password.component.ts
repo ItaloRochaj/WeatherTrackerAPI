@@ -13,10 +13,10 @@ import { WeatherTrackerApiService } from '../../services/weather-tracker-api.ser
       <div class="auth-card">
         <h1>Set New Password</h1>
         <div class="stars-bg"></div>
-        
+
         <div *ngIf="!resetSuccess" class="form-container">
           <p class="description">Please enter your new password below.</p>
-          
+
           <div class="form-group">
             <input
               type="password"
@@ -49,8 +49,8 @@ import { WeatherTrackerApiService } from '../../services/weather-tracker-api.ser
 
           <div class="error-message" *ngIf="error">{{ error }}</div>
 
-          <button 
-            class="submit-btn" 
+          <button
+            class="submit-btn"
             (click)="onSubmit()"
             [disabled]="isLoading || !isValidPassword()"
           >
@@ -323,7 +323,7 @@ export class ResetPasswordComponent implements OnInit {
         newPassword: this.newPassword,
         confirmPassword: this.confirmPassword
       }).toPromise();
-      
+
       this.resetSuccess = true;
     } catch (error: any) {
       this.error = error.error?.message || 'An error occurred. Please try again.';

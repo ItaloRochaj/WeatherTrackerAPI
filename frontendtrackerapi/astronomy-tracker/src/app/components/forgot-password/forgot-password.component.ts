@@ -20,10 +20,10 @@ import { AuthService } from '../../services/auth.service';
         <form [formGroup]="forgotPasswordForm" (ngSubmit)="onSubmit()" class="form">
           <div class="form-field">
             <label for="email">Email</label>
-            <input 
-              type="email" 
+            <input
+              type="email"
               id="email"
-              formControlName="email" 
+              formControlName="email"
               required
               [class.error]="forgotPasswordForm.get('email')?.invalid && forgotPasswordForm.get('email')?.touched"
             >
