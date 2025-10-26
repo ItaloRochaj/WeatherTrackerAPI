@@ -1,11 +1,14 @@
 import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WeatherTrackerApiService } from '../../services/weather-tracker-api.service';
-import { ApodDto } from '../../models/astronomy.models';
+import { ApodDto, UserDto } from '../../models/astronomy.models';
+import { AuthService } from '../../services/auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-astronomy-today',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './astronomy-today.component.html',
   styleUrl: './astronomy-today.component.scss'
 })
@@ -16,16 +19,36 @@ export class AstronomyTodayComponent implements OnInit, OnChanges {
   showOverlay = false;
   error: string | null = null;
   isLoading = false;
+  isAuthenticated = false;
 
-  constructor(private apiService: WeatherTrackerApiService) {}
+  constructor(
+    private apiService: WeatherTrackerApiService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    // Sempre inicia com a data específica do Witch's Broom Nebula
-    this.selectedDate = '2025-10-01';
-    this.loadAstronomyData();
-  }
+    // Verifica o estado inicial de autenticação
+    this.isAuthenticated = this.authService.isAuthenticated;
 
-  ngOnChanges(): void {
+    // Para usuários não autenticados, mostra a imagem padrão
+    if (!this.isAuthenticated) {
+      this.selectedDate = '2025-09-30';
+    } else {
+      // Para usuários autenticados, mostra a imagem do Witch's Broom Nebula
+      this.selectedDate = '2025-10-01';
+    }
+
+    this.loadAstronomyData();
+
+    // Observa mudanças no estado de autenticação através do usuário atual
+    this.authService.currentUser$.subscribe((user: UserDto | null) => {
+      this.isAuthenticated = !!user;
+      if (!this.isAuthenticated) {
+        this.selectedDate = '2025-09-30';
+        this.loadAstronomyData();
+      }
+    });
+  }  ngOnChanges(): void {
     // Carrega os dados apenas se a data selecionada for diferente da padrão
     if (this.selectedDate && this.selectedDate !== '2025-10-01') {
       this.loadAstronomyData();
@@ -84,6 +107,13 @@ export class AstronomyTodayComponent implements OnInit, OnChanges {
 
   retry(): void {
     this.loadAstronomyData();
+  }
+
+  onDateSelect(date: string): void {
+    if (this.isAuthenticated) {
+      this.selectedDate = date;
+      this.loadAstronomyData();
+    }
   }
 
   onToggleFavorite(): void {

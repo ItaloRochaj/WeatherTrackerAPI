@@ -23,23 +23,23 @@
     <div class="container">
       <div class="events-grid" *ngIf="events.length > 0; else noEvents">
         @for (event of events; track event.id) {
-          <div class="event-card">
+          <div class="event-card" [attr.data-type]="event.type">
             <div class="event-image">
-              <img [src]="getEventImage(event.type)" [alt]="event.title" class="event-img">
+              <img [src]="event.imageUrl || getEventImage(event.type)" [alt]="event.title" class="event-img" (error)="onImageError($event, event.type)">
               <div class="event-type-badge" [style.background-color]="getEventTypeColor(event.type)">
                 {{ getEventTypeLabel(event.type) }}
               </div>
             </div>
-            
+
             <div class="event-content">
               <h3 class="event-title">{{ event.title }}</h3>
               <p class="event-date">
-                <span class="calendar-icon">📅</span> 
+                <span class="calendar-icon">📅</span>
                 {{ formatDate(event.date) }}
                 <span class="days-until">{{ getDaysUntil(event.date) }} days away</span>
               </p>
               <p class="event-description">{{ event.description }}</p>
-              
+
               <div class="event-details">
                 <div class="detail-item">
                   <span class="icon">⏰</span>
@@ -50,27 +50,39 @@
                   <span>{{ event.visibility }}</span>
                 </div>
               </div>
-              
+
               <button class="btn btn-primary">Learn More</button>
             </div>
           </div>
         }
       </div>
-      
+
       <ng-template #noEvents>
         <div class="no-events">
           <h3>No upcoming events</h3>
           <p>Check back later for new celestial events!</p>
         </div>
       </ng-template>
-      
+
       <!-- Refresh Button -->
       <div class="refresh-section">
-        <button (click)="refreshEvents()" class="refresh-btn">
-          <span class="refresh-icon">🔄</span> 
-          Refresh Events
+        <button (click)="refreshEvents()"
+                class="refresh-btn"
+                [disabled]="loading"
+                aria-label="Refresh events"
+                title="Refresh events">
+          <span class="spinner" *ngIf="loading"></span>
+          <svg *ngIf="!loading" class="refresh-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"/>
+            <polyline points="1 20 1 14 7 14"/>
+            <path d="M3.51 9a9 9 0 0 1 14.13-3.36L23 10M1 14l5.36 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+          <span class="btn-label">{{ loading ? 'Refreshing…' : 'Refresh Events' }}</span>
         </button>
-        <p class="last-updated">Data updated automatically from astronomical databases</p>
+        <p class="last-updated">
+          <span *ngIf="lastUpdated; else autoInfo">Last updated: {{ lastUpdated | date:'mediumTime' }}</span>
+          <ng-template #autoInfo>Data updated automatically from astronomical databases</ng-template>
+        </p>
       </div>
     </div>
   </section>

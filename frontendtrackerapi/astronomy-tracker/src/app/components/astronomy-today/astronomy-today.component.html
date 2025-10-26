@@ -2,6 +2,8 @@
   <div class="container">
     <h2 class="section-title">Today's Astronomy</h2>
 
+    <!-- Date selector removed per request: authenticated users no longer see a date input here -->
+
     <!-- Loading State -->
     <div class="loading-container" *ngIf="isLoading">
       <div class="loading"></div>
@@ -34,8 +36,8 @@
       <div class="astronomy-info">
         <div class="title-row">
           <h3 class="astronomy-title">{{ astronomyData.title }}</h3>
-          <button 
-            class="favorite-btn" 
+          <button
+            class="favorite-btn"
             (click)="onToggleFavorite()"
             [class.favorited]="astronomyData.isFavorited">
             <svg width="24" height="24" viewBox="0 0 24 24" [attr.fill]="astronomyData.isFavorited ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2">
@@ -43,16 +45,16 @@
             </svg>
           </button>
         </div>
-        
+
         <p class="astronomy-date">{{ formatDate(astronomyData.date) }}</p>
-        
+
         <!-- Rating Section -->
         <div class="rating-section" *ngIf="astronomyData.id">
           <span class="rating-label">Rate this image:</span>
           <div class="stars">
-            <button 
-              *ngFor="let star of [1,2,3,4,5]" 
-              class="star" 
+            <button
+              *ngFor="let star of [1,2,3,4,5]"
+              class="star"
               [class.filled]="star <= (astronomyData.rating || 0)"
               (click)="onRateImage(star)">
               ★

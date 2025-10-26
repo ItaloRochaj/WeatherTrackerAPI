@@ -13,6 +13,7 @@ export class EventsComponent implements OnInit {
   events: CelestialEvent[] = [];
   error: string | null = null;
   loading: boolean = false;
+  lastUpdated: Date | null = null;
 
   constructor(private astronomyService: AstronomyService) {}
 
@@ -28,6 +29,7 @@ export class EventsComponent implements OnInit {
       next: (data) => {
         this.events = data;
         this.loading = false;
+        this.lastUpdated = new Date();
       },
       error: (err) => {
         this.error = 'Failed to load events. Please try again.';
@@ -49,11 +51,11 @@ export class EventsComponent implements OnInit {
 
     // URLs de fallback usando imagens públicas
     const fallbackImageMap: { [key: string]: string } = {
-      'meteor_shower': 'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=400&h=300&fit=crop',
-      'lunar_eclipse': 'https://unsplash.com/pt-br/fotografias/solar-eclipse-7YiZKj9A3DM',
-      'planetary_alignment': 'https://unsplash.com/pt-br/fotografias/tres-circulos-de-cores-diferentes-em-um-fundo-preto-lJu79_jOnTM',
-      'solar_eclipse': 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop',
-      'other': 'https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=400&h=300&fit=crop'
+      'meteor_shower': 'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=800&h=600&fit=crop',
+      'lunar_eclipse': 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=600&fit=crop',
+      'planetary_alignment': 'https://images.unsplash.com/photo-1465101162946-4377e57745c3?w=800&h=600&fit=crop',
+      'solar_eclipse': 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop',
+      'other': 'https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=800&h=600&fit=crop'
     };
 
     // Por enquanto, retorna diretamente o fallback
@@ -70,6 +72,13 @@ export class EventsComponent implements OnInit {
     };
 
     return labelMap[type] || labelMap['other'];
+  }
+
+  onImageError(event: Event, type: string): void {
+    const img = event.target as HTMLImageElement | null;
+    if (img) {
+      img.src = this.getEventImage(type);
+    }
   }
 
   formatEventDate(dateString: string): string {
