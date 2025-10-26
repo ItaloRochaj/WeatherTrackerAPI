@@ -42,6 +42,13 @@ public class User
     [Column(TypeName = "datetime")]
     public DateTime? UpdatedAt { get; set; }
     
+    [MaxLength(100)]
+    [Column(TypeName = "nvarchar(100)")]
+    public string? PasswordResetToken { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? PasswordResetTokenExpires { get; set; }
+    
     [NotMapped]
     public string FullName => $"{FirstName} {LastName}";
 }

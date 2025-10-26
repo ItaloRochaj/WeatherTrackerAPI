@@ -1,0 +1,32 @@
+{
+  "SmtpSettings": {
+    "Providers": {
+      "Gmail": {
+        "Server": "smtp.gmail.com",
+        "Port": 587,
+        "RequiresAppPassword": true,
+        "UseSsl": true,
+        "Note": "1. Ative a verificação em 2 etapas em https://myaccount.google.com/security\n2. Gere uma senha de app em https://myaccount.google.com/apppasswords"
+      },
+      "iCloud": {
+        "Server": "smtp.mail.me.com",
+        "Port": 587,
+        "RequiresAppPassword": true,
+        "UseSsl": true,
+        "Note": "1. Ative a verificação em 2 etapas em https://appleid.apple.com/account/manage\n2. Gere uma senha de app específica para o WeatherTracker"
+      },
+      "Outlook": {
+        "Server": "smtp-mail.outlook.com",
+        "Port": 587,
+        "RequiresAppPassword": false,
+        "UseSsl": true,
+        "Note": "1. Use seu email do Outlook/Hotmail\n2. Use sua senha normal da conta\n3. Se tiver problemas, ative 'Permitir apps menos seguros'"
+      }
+    },
+    "ActiveProvider": "Gmail",
+    "Username": "seu-email@gmail.com",
+    "Password": "sua-senha-de-app",
+    "FromEmail": "seu-email@gmail.com",
+    "FromName": "Weather Tracker API"
+  }
+}

@@ -105,5 +105,66 @@ namespace WeatherTrackerAPI.Controllers
                 return StatusCode(500, new { message = "Erro interno do servidor" });
             }
         }
+
+        [HttpPost("forgot-password")]
+        [ProducesResponseType(typeof(ForgotPasswordResponseDto), 200)]
+        [ProducesResponseType(typeof(object), 400)]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var result = await _authService.ForgotPasswordAsync(forgotPasswordDto.Email);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing forgot password request");
+                return StatusCode(500, new { success = false, message = "Erro ao processar solicitação de redefinição de senha" });
+            }
+        }
+
+        [HttpPost("reset-password")]
+        [ProducesResponseType(typeof(ResetPasswordResponseDto), 200)]
+        [ProducesResponseType(typeof(object), 400)]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var result = await _authService.ResetPasswordAsync(resetPasswordDto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error resetting password");
+                return StatusCode(500, new { success = false, message = "Erro ao redefinir senha" });
+            }
+        }
+
+        [HttpGet("validate-reset-token/{token}")]
+        [ProducesResponseType(typeof(object), 200)]
+        [ProducesResponseType(typeof(object), 400)]
+        public async Task<IActionResult> ValidateResetToken(string token)
+        {
+            try
+            {
+                var isValid = await _authService.ValidateResetTokenAsync(token);
+                return Ok(new { success = isValid, message = isValid ? "Token válido" : "Token inválido" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error validating reset token");
+                return StatusCode(500, new { success = false, message = "Erro ao validar token" });
+            }
+        }
     }
 }

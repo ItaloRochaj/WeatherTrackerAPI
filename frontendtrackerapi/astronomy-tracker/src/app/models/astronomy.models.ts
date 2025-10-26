@@ -87,6 +87,28 @@ export interface ValidateTokenResponseDto {
   message: string;
 }
 
+// Password Reset DTOs
+export interface ForgotPasswordDto {
+  email: string;
+}
+
+export interface ForgotPasswordResponseDto {
+  message: string;
+  success: boolean;
+}
+
+export interface ResetPasswordDto {
+  token: string;
+  email: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface ResetPasswordResponseDto {
+  message: string;
+  success: boolean;
+}
+
 // API Response wrapper
 export interface ApiResponse<T> {
   success: boolean;

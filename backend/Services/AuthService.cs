@@ -10,29 +10,23 @@ using WeatherTrackerAPI.Repositories;
 
 namespace WeatherTrackerAPI.Services
 {
-    public interface IAuthService
-    {
-        Task<LoginResponseDto> LoginAsync(LoginDto loginDto);
-        Task<RegisterResponseDto> RegisterAsync(RegisterDto registerDto);
-        Task<bool> ValidateTokenAsync(string token);
-        Task<ValidateTokenResponseDto> ValidateTokenWithUserAsync(ValidateTokenDto validateTokenDto);
-        string GenerateJwtToken(User user);
-    }
-
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
         private readonly JwtSettings _jwtSettings;
         private readonly ILogger<AuthService> _logger;
+        private readonly IEmailService _emailService;
 
         public AuthService(
             IUserRepository userRepository,
             IOptions<JwtSettings> jwtSettings,
-            ILogger<AuthService> logger)
+            ILogger<AuthService> logger,
+            IEmailService emailService)
         {
             _userRepository = userRepository;
             _jwtSettings = jwtSettings.Value;
             _logger = logger;
+            _emailService = emailService;
         }
 
         public async Task<LoginResponseDto> LoginAsync(LoginDto loginDto)
@@ -182,6 +176,77 @@ namespace WeatherTrackerAPI.Services
                     Message = "Token inválido"
                 };
             }
+        }
+
+        public async Task<ForgotPasswordResponseDto> ForgotPasswordAsync(string email)
+        {
+            var user = await _userRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                // Não revelar se o email existe ou não por segurança
+                return new ForgotPasswordResponseDto 
+                { 
+                    Success = true,
+                    Message = "Se o email existir no sistema, você receberá as instruções para redefinir sua senha." 
+                };
+            }
+
+            // Gerar token de redefinição de senha
+            var resetToken = Guid.NewGuid().ToString();
+            user.PasswordResetToken = resetToken;
+            user.PasswordResetTokenExpires = DateTime.UtcNow.AddHours(1);
+            
+            await _userRepository.UpdateAsync(user);
+
+            // Enviar email com o link de redefinição
+            var resetLink = $"http://localhost:4200/reset-password?token={resetToken}&email={email}";
+            var emailBody = $@"
+                <h2>Redefinição de Senha</h2>
+                <p>Você solicitou a redefinição de sua senha.</p>
+                <p>Clique no link abaixo para criar uma nova senha:</p>
+                <p><a href='{resetLink}'>Redefinir Senha</a></p>
+                <p>Este link expira em 1 hora.</p>
+                <p>Se você não solicitou esta redefinição, ignore este email.</p>";
+
+            await _emailService.SendEmailAsync(email, "Redefinição de Senha - Weather Tracker API", emailBody);
+
+            return new ForgotPasswordResponseDto 
+            { 
+                Success = true,
+                Message = "Se o email existir no sistema, você receberá as instruções para redefinir sua senha." 
+            };
+        }
+
+        public async Task<ResetPasswordResponseDto> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
+        {
+            var user = await _userRepository.GetByEmailAsync(resetPasswordDto.Email);
+            if (user == null || user.PasswordResetToken != resetPasswordDto.Token ||
+                !user.PasswordResetTokenExpires.HasValue || 
+                user.PasswordResetTokenExpires.Value < DateTime.UtcNow)
+            {
+                throw new InvalidOperationException("Token inválido ou expirado");
+            }
+
+            // Atualizar senha
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(resetPasswordDto.NewPassword);
+            user.PasswordResetToken = null;
+            user.PasswordResetTokenExpires = null;
+
+            await _userRepository.UpdateAsync(user);
+
+            return new ResetPasswordResponseDto 
+            { 
+                Success = true,
+                Message = "Senha atualizada com sucesso" 
+            };
+        }
+
+        public async Task<bool> ValidateResetTokenAsync(string token)
+        {
+            var user = await _userRepository.GetByResetTokenAsync(token);
+            return user != null && 
+                   user.PasswordResetTokenExpires.HasValue && 
+                   user.PasswordResetTokenExpires.Value > DateTime.UtcNow;
         }
 
         public string GenerateJwtToken(User user)

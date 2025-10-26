@@ -13,6 +13,7 @@ namespace WeatherTrackerAPI.Repositories
         Task<bool> EmailExistsAsync(string email);
         Task<IEnumerable<User>> GetAllAsync();
         Task<bool> DeleteAsync(Guid id);
+        Task<User?> GetByResetTokenAsync(string token);
     }
 
     public class UserRepository : IUserRepository
@@ -74,6 +75,12 @@ namespace WeatherTrackerAPI.Repositories
             user.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<User?> GetByResetTokenAsync(string token)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.PasswordResetToken == token && u.IsActive);
         }
     }
 }

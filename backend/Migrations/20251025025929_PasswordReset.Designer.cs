@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WeatherTrackerAPI.Data;
 
@@ -11,9 +12,11 @@ using WeatherTrackerAPI.Data;
 namespace WeatherTrackerAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251025025929_PasswordReset")]
+    partial class PasswordReset
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,10 +126,10 @@ namespace WeatherTrackerAPI.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("PasswordResetToken")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
-                    b.Property<DateTime?>("PasswordResetTokenExpires")
+                    b.Property<DateTime?>("PasswordResetTokenExpiry")
                         .HasColumnType("datetime");
 
                     b.Property<string>("Role")

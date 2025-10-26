@@ -8,6 +8,8 @@ import {
   LoginResponseDto,
   RegisterDto,
   RegisterResponseDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
   ValidateTokenDto,
   ValidateTokenResponseDto,
   UserDto
@@ -165,6 +167,28 @@ export class AuthService {
     });
   }
 
+  // Password Reset Methods
+  forgotPassword(data: ForgotPasswordDto): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/auth/forgot-password`, data)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  resetPassword(data: ResetPasswordDto): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/auth/reset-password`, data)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  validateResetToken(token: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/auth/validate-reset-token/${token}`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
 
@@ -179,6 +203,8 @@ export class AuthService {
         errorMessage = 'Email already registered';
       } else if (error.status === 400) {
         errorMessage = 'Invalid data provided';
+      } else if (error.status === 404) {
+        errorMessage = 'User not found';
       } else if (error.status === 500) {
         errorMessage = 'Server error. Please try again later.';
       } else {

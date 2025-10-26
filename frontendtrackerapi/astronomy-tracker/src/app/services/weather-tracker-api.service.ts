@@ -1,13 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
-import { catchError, map, retry } from 'rxjs/operators';
+import { catchError, retry } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import {
-  ApodDto,
-  ApodTrendDto,
-  RatingDto,
-  HealthResponse
+import { 
+  ApodDto, 
+  RatingDto, 
+  LoginDto, 
+  RegisterDto, 
+  ApodTrendDto, 
+  HealthResponse,
+  ForgotPasswordDto,
+  ForgotPasswordResponseDto,
+  ResetPasswordDto,
+  ResetPasswordResponseDto,
+  ApiResponse
 } from '../models/astronomy.models';
 import { AuthService } from './auth.service';
 
@@ -260,5 +267,21 @@ export class WeatherTrackerApiService {
 
     console.error('Astronomy Service Error:', errorMessage);
     return throwError(() => errorMessage);
+  }
+
+  // Password Reset Methods
+  forgotPassword(data: ForgotPasswordDto): Observable<ApiResponse<ForgotPasswordResponseDto>> {
+    return this.http.post<ApiResponse<ForgotPasswordResponseDto>>(`${this.baseUrl}/auth/forgot-password`, data)
+      .pipe(catchError(this.handleError));
+  }
+
+  resetPassword(data: ResetPasswordDto): Observable<ApiResponse<ResetPasswordResponseDto>> {
+    return this.http.post<ApiResponse<ResetPasswordResponseDto>>(`${this.baseUrl}/auth/reset-password`, data)
+      .pipe(catchError(this.handleError));
+  }
+
+  validateResetToken(token: string): Observable<ApiResponse<void>> {
+    return this.http.get<ApiResponse<void>>(`${this.baseUrl}/auth/validate-reset-token/${token}`)
+      .pipe(catchError(this.handleError));
   }
 }
