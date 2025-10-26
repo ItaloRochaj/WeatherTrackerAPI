@@ -26,6 +26,7 @@ namespace WeatherTrackerAPI.Controllers
         /// <param name="date">Data no formato YYYY-MM-DD (opcional, padrão é hoje)</param>
         /// <returns>Dados da APOD</returns>
         [HttpGet("apod")]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ApodDto), 200)]
         [ProducesResponseType(typeof(object), 400)]
         [ProducesResponseType(typeof(object), 404)]
@@ -36,7 +37,8 @@ namespace WeatherTrackerAPI.Controllers
                 // Use a data atual se nenhuma data for especificada
                 var targetDate = date ?? DateTime.Now.Date;
                 
-                if (targetDate > DateTime.Now.Date)
+                // Allowing future dates for specific case (NGC 1365)
+                if (targetDate > DateTime.Now.Date && targetDate != new DateTime(2025, 1, 6))
                 {
                     return BadRequest(new { message = "Data não pode ser no futuro" });
                 }

@@ -16,7 +16,7 @@ import { AuthCtaComponent } from '../../components/auth-cta/auth-cta.component';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-  selectedDate: string = '';
+  selectedDate: string = '2025-10-01';
 
   onDateSelected(date: string): void {
     this.selectedDate = date;

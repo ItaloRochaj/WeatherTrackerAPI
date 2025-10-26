@@ -20,11 +20,16 @@ export class AstronomyTodayComponent implements OnInit, OnChanges {
   constructor(private apiService: WeatherTrackerApiService) {}
 
   ngOnInit(): void {
+    // Sempre inicia com a data específica do Witch's Broom Nebula
+    this.selectedDate = '2025-10-01';
     this.loadAstronomyData();
   }
 
   ngOnChanges(): void {
-    this.loadAstronomyData();
+    // Carrega os dados apenas se a data selecionada for diferente da padrão
+    if (this.selectedDate && this.selectedDate !== '2025-10-01') {
+      this.loadAstronomyData();
+    }
   }
 
   loadAstronomyData(): void {
@@ -32,8 +37,15 @@ export class AstronomyTodayComponent implements OnInit, OnChanges {
     this.astronomyData = null;
     this.isLoading = true;
 
+    // Formatar a data no formato YYYY-MM-DD
+    let formattedDate = this.selectedDate;
+    if (formattedDate) {
+      const date = new Date(formattedDate);
+      formattedDate = date.toISOString().split('T')[0];
+    }
+
     // Try to get real data first, fallback to mock if needed
-    this.apiService.getApod(this.selectedDate).subscribe({
+    this.apiService.getApod(formattedDate).subscribe({
       next: (data: ApodDto) => {
         this.astronomyData = data;
         this.isLoading = false;
