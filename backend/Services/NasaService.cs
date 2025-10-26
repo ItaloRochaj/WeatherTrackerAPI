@@ -20,6 +20,7 @@ namespace WeatherTrackerAPI.Services
         Task<ApodDto> IncrementViewCountAsync(Guid id);
         Task<ApodDto> UpdateRatingAsync(Guid id, double rating);
         Task<ApodDto> ToggleFavoriteAsync(Guid id);
+        Task<IEnumerable<ApodCalendarItemDto>> GetApodCalendarMonthAsync(int year, int month);
     }
 
     public class NasaService : INasaService
@@ -239,6 +240,174 @@ namespace WeatherTrackerAPI.Services
         {
             var apod = await _apodRepository.ToggleFavoriteAsync(id);
             return _mapper.Map<ApodDto>(apod);
+        }
+
+    public async Task<IEnumerable<ApodCalendarItemDto>> GetApodCalendarMonthAsync(int year, int month)
+        {
+            if (month < 1 || month > 12)
+                throw new ArgumentOutOfRangeException(nameof(month), "Month must be between 1 and 12.");
+            if (year < 1995 || year > DateTime.UtcNow.Year + 1)
+                throw new ArgumentOutOfRangeException(nameof(year), "Year out of supported APOD range.");
+
+            try
+            {
+                // Cache the whole month to avoid repeated scrapes on navigation
+                var cacheKey = $"apod_calendar_{year:D4}_{month:D2}";
+                if (_cache.TryGetValue(cacheKey, out IEnumerable<ApodCalendarItemDto>? cached) && cached != null)
+                {
+                    _logger.LogInformation("Returning cached APOD calendar for {Year}-{Month}", year, month);
+                    return cached;
+                }
+                var yy = year % 100;
+                var mm = month.ToString("D2");
+                var calendarUrl = $"https://apod.nasa.gov/apod/calendar/ca{yy:D2}{mm}.html";
+
+                _logger.LogInformation("Fetching APOD calendar for {Year}-{Month} from {Url}", year, month, calendarUrl);
+
+                var html = await _httpClient.GetStringAsync(calendarUrl);
+                if (string.IsNullOrWhiteSpace(html))
+                {
+                    return Enumerable.Empty<ApodCalendarItemDto>();
+                }
+
+                var items = new List<ApodCalendarItemDto>();
+
+                // Unified parsing: capture any anchor to apYYMMDD.html and inspect inner HTML
+                // Handles both patterns:
+                // 1) <a href="apYYMMDD.html"><img src="image/..." alt="Title"></a>
+                // 2) <a href="apYYMMDD.html">Title text</a>
+                var anchorPattern = "<a\\s+href=\\\"(?<page>ap\\d{6}\\.html)\\\"[^>]*>(?<inner>.*?)</a>";
+                var anchorRx = new System.Text.RegularExpressions.Regex(anchorPattern,
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Singleline);
+                var anchorMatches = anchorRx.Matches(html);
+
+                var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (System.Text.RegularExpressions.Match m in anchorMatches)
+                {
+                    var pageRel = m.Groups["page"].Value; // apYYMMDD.html
+                    if (string.IsNullOrWhiteSpace(pageRel)) continue;
+
+                    // Derive date from the page name (apYYMMDD.html)
+                    var yys = pageRel.Substring(2, 2);
+                    var mms = pageRel.Substring(4, 2);
+                    var dds = pageRel.Substring(6, 2);
+
+                    int parsedYear = (int.Parse(yys) >= 95 ? 1900 + int.Parse(yys) : 2000 + int.Parse(yys));
+                    if (parsedYear != year)
+                    {
+                        // Some older pages may mix years; trust requested year for the month page
+                        parsedYear = year;
+                    }
+                    var date = new DateTime(parsedYear, int.Parse(mms), int.Parse(dds));
+
+                    // Skip if not the month requested (defensive)
+                    if (date.Month != month || date.Year != year) continue;
+
+                    string baseApod = "https://apod.nasa.gov/apod/";
+                    string pageUrl = baseApod + pageRel;
+                    if (!seen.Add(pageUrl)) continue; // avoid duplicates
+
+                    string innerHtml = m.Groups["inner"].Value ?? string.Empty;
+                    string imageUrl = string.Empty;
+                    string title = string.Empty;
+
+                    // Try to parse an img inside the anchor
+                    var imgRx = new System.Text.RegularExpressions.Regex("<img[^>]*src=\\\"(?<src>[^\\\"]+)\\\"[^>]*>",
+                        System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Singleline);
+                    var imgMatch = imgRx.Match(innerHtml);
+                    if (imgMatch.Success)
+                    {
+                        var imgRel = imgMatch.Groups["src"].Value;
+                        imageUrl = imgRel.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                            ? imgRel
+                            : baseApod + imgRel.TrimStart('/');
+
+                        // Try alt attribute as title
+                        var altRx = new System.Text.RegularExpressions.Regex("alt=\\\"(?<alt>[^\\\"]+)\\\"",
+                            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        var altMatch = altRx.Match(innerHtml);
+                        if (altMatch.Success)
+                        {
+                            title = altMatch.Groups["alt"].Value;
+                        }
+                    }
+
+                    // If no image in calendar cell, try to extract from the APOD page itself (og:image or first <img>)
+                    if (string.IsNullOrWhiteSpace(imageUrl))
+                    {
+                        try
+                        {
+                            var pageHtml = await _httpClient.GetStringAsync(pageUrl);
+
+                            // Prefer og:image
+                            var ogImgRx = new System.Text.RegularExpressions.Regex("<meta[^>]+property=\\\"og:image\\\"[^>]+content=\\\"(?<og>[^\\\"]+)\\\"[^>]*>",
+                                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                            var ogMatch = ogImgRx.Match(pageHtml);
+                            if (ogMatch.Success)
+                            {
+                                var ogUrl = ogMatch.Groups["og"].Value;
+                                imageUrl = ogUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? ogUrl : baseApod + ogUrl.TrimStart('/');
+                            }
+                            if (string.IsNullOrWhiteSpace(imageUrl))
+                            {
+                                // Fallback: first <img src="...">
+                                var firstImgMatch = imgRx.Match(pageHtml);
+                                if (firstImgMatch.Success)
+                                {
+                                    var imgRel2 = firstImgMatch.Groups["src"].Value;
+                                    imageUrl = imgRel2.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                                        ? imgRel2
+                                        : baseApod + imgRel2.TrimStart('/');
+                                }
+                            }
+
+                            // If title is still empty, try to read from <title>
+                            if (string.IsNullOrWhiteSpace(title))
+                            {
+                                var titleRx = new System.Text.RegularExpressions.Regex("<title>(?<t>[^<]+)</title>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                                var tMatch = titleRx.Match(pageHtml);
+                                if (tMatch.Success)
+                                {
+                                    title = System.Net.WebUtility.HtmlDecode(tMatch.Groups["t"].Value).Trim();
+                                }
+                            }
+                        }
+                        catch (Exception fetchEx)
+                        {
+                            _logger.LogWarning(fetchEx, "Failed to fetch APOD page to resolve image for {PageUrl}", pageUrl);
+                        }
+                    }
+
+                    if (string.IsNullOrWhiteSpace(title))
+                    {
+                        // Fallback: strip tags from innerHtml to get text content
+                        var text = System.Text.RegularExpressions.Regex.Replace(innerHtml, "<[^>]+>", " ");
+                        text = System.Net.WebUtility.HtmlDecode(text ?? string.Empty).Trim();
+                        // Collapse whitespace
+                        text = System.Text.RegularExpressions.Regex.Replace(text, "\\s+", " ").Trim();
+                        title = string.IsNullOrWhiteSpace(text) ? $"APOD {date:yyyy-MM-dd}" : text;
+                    }
+
+                    items.Add(new ApodCalendarItemDto
+                    {
+                        Date = date,
+                        Title = title,
+                        ImageUrl = imageUrl,
+                        PageUrl = pageUrl
+                    });
+                }
+
+                // Order by date ascending
+                var ordered = items.OrderBy(i => i.Date).ToList();
+                // Cache result for some hours to limit repeated scraping
+                _cache.Set(cacheKey, ordered, TimeSpan.FromHours(12));
+                return ordered;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to parse APOD calendar for {Year}-{Month}", year, month);
+                throw;
+            }
         }
     }
 }
