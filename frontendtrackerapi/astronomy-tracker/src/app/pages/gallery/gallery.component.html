@@ -24,6 +24,14 @@
         </div>
 
         <div class="date-filter">
+          <!-- Month/Year quick selector -->
+          <div class="month-picker">
+            <button class="btn btn-secondary" (click)="prevMonth()" aria-label="Previous month">‹</button>
+            <span class="month-label">{{ currentYear }} · {{ currentMonth | number:'2.0-0' }}</span>
+            <button class="btn btn-secondary" (click)="nextMonth()" aria-label="Next month">›</button>
+            <button class="btn btn-primary" (click)="fetchMonth(currentYear, currentMonth)" aria-label="Load month">Load Month</button>
+          </div>
+
           <label for="startDate">From:</label>
           <input
             type="date"

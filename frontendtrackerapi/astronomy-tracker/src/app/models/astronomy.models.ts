@@ -15,6 +15,12 @@ export interface ApodDto {
   updatedAt: string;
 }
 
+export interface UserDto {
+  id: string;
+  username: string;
+  email: string;
+}
+
 export interface ApodResponse {
   date: string;
   title: string;

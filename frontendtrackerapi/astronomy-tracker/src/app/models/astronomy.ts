@@ -35,3 +35,10 @@ export interface SearchRequest {
   startDate?: string;
   endDate?: string;
 }
+
+export interface ApodCalendarItem {
+  date: string;      // ISO date string
+  title: string;
+  imageUrl: string;
+  pageUrl: string;
+}

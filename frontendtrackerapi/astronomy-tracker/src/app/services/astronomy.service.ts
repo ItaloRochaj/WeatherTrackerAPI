@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { AstronomyPictureOfDay, CelestialEvent, HistoricalData, SearchRequest } from '../models/astronomy';
+import { AstronomyPictureOfDay, CelestialEvent, HistoricalData, SearchRequest, ApodCalendarItem } from '../models/astronomy';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AstronomyService {
-  private apiUrl = 'http://localhost:5000/api'; // URL do WeatherTrackerAPI
+  private apiUrl = 'http://localhost:5170/api'; // URL do WeatherTrackerAPI (alinhado com backend atual)
 
   constructor(private http: HttpClient) { }
 
@@ -31,6 +31,15 @@ export class AstronomyService {
       .pipe(
         // Fallback para dados mockados
       );
+  }
+
+  // APOD calendário por mês (proxy pelo backend para evitar CORS)
+  getApodCalendarMonth(year: number, month: number): Observable<ApodCalendarItem[]> {
+    const params = new HttpParams()
+      .set('year', year)
+      .set('month', month);
+    // Nota: endpoint correto no backend é /nasa/apod/calendar
+    return this.http.get<ApodCalendarItem[]>(`${this.apiUrl}/nasa/apod/calendar`, { params });
   }
 
   // Buscar no histórico
@@ -69,36 +78,62 @@ export class AstronomyService {
   }
 
   getMockEvents(): Observable<CelestialEvent[]> {
+    // Realistic upcoming events with representative images (dates in the future)
     const mockEvents: CelestialEvent[] = [
       {
-        id: '1',
-        title: 'Meteor Shower',
-        description: 'Witness a spectacular meteor shower with shooting stars across the night sky.',
-        date: '2025-10-15',
+        id: 'leonids-2025',
+        title: 'Leonids Meteor Shower Peak',
+        description: 'Annual Leonids peak with fast, bright meteors originating from comet Tempel–Tuttle.',
+        date: '2025-11-18',
         type: 'meteor_shower',
-        visibility: 'Worldwide',
-        duration: '2-3 hours',
-        imageUrl: 'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=400&h=300&fit=crop'
+        visibility: 'Best before dawn, both hemispheres (dark skies)',
+        duration: 'Overnight peak',
+        // Use the attached image stored locally in assets
+        imageUrl: 'assets/images/Leonids Meteor Shower Peak.png'
       },
       {
-        id: '2',
-        title: 'Lunar Eclipse',
-        description: 'Observe a breath-taking lunar eclipse as the Earth\'s shadow covers the Moon.',
-        date: '2025-11-08',
-        type: 'lunar_eclipse',
-        visibility: 'Americas, Europe',
-        duration: '3.5 hours',
-        imageUrl: 'https://unsplash.com/pt-br/fotografias/solar-eclipse-7YiZKj9A3DM'
-      },
-      {
-        id: '3',
-        title: 'Planetary Alignment',
-        description: 'See planets align in a rare celestial event visible to the naked eye.',
-        date: '2025-12-20',
+        id: 'venus-jupiter-2025',
+        title: 'Venus–Jupiter Conjunction',
+        description: 'Brilliant pairing of Venus and Jupiter low in the evening sky; a striking planetary alignment.',
+        date: '2025-12-06',
         type: 'planetary_alignment',
-        visibility: 'Global',
-        duration: 'All night',
-        imageUrl: 'https://unsplash.com/pt-br/fotografias/tres-circulos-de-cores-diferentes-em-um-fundo-preto-lJu79_jOnTM'
+        visibility: 'Global, low western sky after sunset',
+        duration: '1–2 hours after sunset',
+        // Use local asset image for conjunction
+        imageUrl: 'assets/images/hero-image.fill.size_1248x702.v1699836321.jpg'
+      },
+      {
+        id: 'geminids-2025',
+        title: 'Geminids Meteor Shower Peak',
+        description: 'One of the best annual showers with numerous slow, colorful meteors from asteroid 3200 Phaethon.',
+        date: '2025-12-14',
+        type: 'meteor_shower',
+        visibility: 'Worldwide; best after midnight',
+        duration: 'All night peak',
+        // Use local asset provided in src/assets/images
+        imageUrl: 'assets/images/geminid-meteor-shower-gty-lv-231211-2_1702319757396_hpMain.avif'
+      },
+      {
+        id: 'lunar-eclipse-2026-03',
+        title: 'Partial Lunar Eclipse',
+        description: 'Earth’s shadow partially covers the Moon — easy to watch with the naked eye.',
+        date: '2026-03-03',
+        type: 'lunar_eclipse',
+        visibility: 'Americas, Europe, Africa (weather permitting)',
+        duration: '2–3 hours',
+        // Use local asset provided in src/assets/images
+        imageUrl: 'assets/images/partial-lunar-eclipse-cropped.jpg'
+      },
+      {
+        id: 'total-solar-eclipse-2026',
+        title: 'Total Solar Eclipse',
+        description: 'A dramatic total eclipse of the Sun; path of totality crosses parts of the Arctic, Iceland, and Spain.',
+        date: '2026-08-12',
+        type: 'solar_eclipse',
+        visibility: 'Path of totality: Greenland, Iceland, Spain; partial elsewhere in Europe',
+        duration: 'Several minutes in totality',
+        // Use local asset provided in src/assets/images
+        imageUrl: 'assets/images/totality-corona.jpg'
       }
     ];
     return of(mockEvents);
