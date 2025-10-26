@@ -68,6 +68,34 @@ namespace WeatherTrackerAPI.Controllers
         }
 
         /// <summary>
+        /// Obtém a lista de APODs do calendário por mês diretamente do site APOD (allyears)
+        /// </summary>
+        /// <param name="year">Ano (ex: 2025)</param>
+        /// <param name="month">Mês 1-12</param>
+        [HttpGet("apod/calendar")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<ApodCalendarItemDto>), 200)]
+        [ProducesResponseType(typeof(object), 400)]
+        public async Task<IActionResult> GetApodCalendar([FromQuery] int year, [FromQuery] int month)
+        {
+            try
+            {
+                if (month < 1 || month > 12)
+                    return BadRequest(new { message = "Mês deve estar entre 1 e 12" });
+                if (year < 1995 || year > DateTime.Now.Year + 1)
+                    return BadRequest(new { message = "Ano fora do intervalo suportado pelo APOD" });
+
+                var result = await _nasaService.GetApodCalendarMonthAsync(year, month);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao obter calendário APOD para {Year}-{Month}", year, month);
+                return StatusCode(500, new { message = "Erro interno do servidor" });
+            }
+        }
+
+        /// <summary>
         /// Obtém uma APOD aleatória
         /// </summary>
         /// <returns>Dados da APOD aleatória</returns>

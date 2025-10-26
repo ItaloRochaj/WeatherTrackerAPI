@@ -145,7 +145,8 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     try
     {
-        context.Database.EnsureCreated();
+        // Apply pending migrations (adds new columns like ProfilePicture)
+        context.Database.Migrate();
     }
     catch (Exception ex)
     {
