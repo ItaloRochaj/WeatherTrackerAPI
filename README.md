@@ -7,6 +7,21 @@ Uma aplicação full‑stack para explorar dados astronômicos (APOD/NASA), clas
 
 > Inspirado no estilo do README do projeto Microserviços E‑commerce, este documento reúne visão geral, arquitetura, execução, endpoints, estrutura do projeto e links para documentação adicional.
 
+<p>
+  <a href="https://dotnet.microsoft.com/"><img alt=".NET 8" src="https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white" /></a>
+  <a href="https://learn.microsoft.com/aspnet/core"><img alt="ASP.NET Core" src="https://img.shields.io/badge/ASP.NET%20Core-Web%20API-512BD4?logo=dotnet&logoColor=white" /></a>
+  <a href="https://learn.microsoft.com/ef/core/"><img alt="EF Core" src="https://img.shields.io/badge/EF%20Core-8-512BD4?logo=dotnet&logoColor=white" /></a>
+  <a href="https://www.microsoft.com/sql-server"><img alt="SQL Server" src="https://img.shields.io/badge/SQL%20Server-2019%2B-CC2927?logo=microsoftsqlserver&logoColor=white" /></a>
+  <a href="https://angular.io/"><img alt="Angular" src="https://img.shields.io/badge/Angular-19-DD0031?logo=angular&logoColor=white" /></a>
+  <a href="https://www.typescriptlang.org/"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" /></a>
+  <a href="https://nodejs.org/"><img alt="Node.js" src="https://img.shields.io/badge/Node.js-20-339933?logo=nodedotjs&logoColor=white" /></a>
+  <a href="https://swagger.io/specification/"><img alt="OpenAPI" src="https://img.shields.io/badge/OpenAPI-3.0-6BA539?logo=openapiinitiative&logoColor=white" /></a>
+  <a href="https://jwt.io/"><img alt="JWT" src="https://img.shields.io/badge/JWT-Auth-000000?logo=jsonwebtokens&logoColor=white" /></a>
+  <a href="https://automapper.org/"><img alt="AutoMapper" src="https://img.shields.io/badge/AutoMapper-Profile-FF6F00" /></a>
+  <a href="https://docs.fluentvalidation.net/"><img alt="FluentValidation" src="https://img.shields.io/badge/FluentValidation-11-5C2D91" /></a>
+  <a href="https://api.nasa.gov/"><img alt="NASA APOD" src="https://img.shields.io/badge/NASA-APOD-0B3D91?logo=nasa&logoColor=white" /></a>
+</p>
+
 ---
 
 ## 📸 Preview
