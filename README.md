@@ -229,7 +229,3 @@ WeatherTrackerAPI/
 
 - [Italo Rocha](https://github.com/ItaloRochaj)
 
----
-
-### Notas
-- Este README foi criado a partir do baseline atual (pós‑reversão de deploy). Se desejar, posso incluir uma seção de Deploy (Vercel/IIS/Render) baseada no ambiente escolhido.
