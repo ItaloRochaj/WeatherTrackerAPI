@@ -16,7 +16,7 @@ Uma aplicação full‑stack para explorar dados astronômicos (APOD/NASA), clas
 </p>
 
 <p align="center">
-  <img src="docs/screenshots/today.png" alt="Today's Astronomy" width="800" />
+  <https://github.com/ItaloRochaj/WeatherTrackerAPI/blob/main/docs/screenshots/Today's%20Astronomy.png" alt="Today's Astronomy" width="800" />
 </p>
 
 <p align="center">
