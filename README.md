@@ -1,4 +1,4 @@
-# 🌌 AstronomyTracker — WeatherTrackerAPI + Angular Frontend
+# 🌌 AstronomyTracker
 
 Uma aplicação full‑stack para explorar dados astronômicos (APOD/NASA), classificar imagens, consultar tendências e gerenciar autenticação de usuários. Este repositório é um monorepo com:
 
