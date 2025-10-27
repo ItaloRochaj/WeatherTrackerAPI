@@ -12,22 +12,22 @@ Uma aplicação full‑stack para explorar dados astronômicos (APOD/NASA), clas
 ## 📸 Preview
 
 <p align="center">
-  <img src="docs/screenshots/home.png" alt="Home" width="800" />
+  <img src="https://github.com/ItaloRochaj/WeatherTrackerAPI/blob/main/docs/screenshots/home.png" alt="Home" width="800" />
 </p>
 
 <p align="center">
-  <https://github.com/ItaloRochaj/WeatherTrackerAPI/blob/main/docs/screenshots/Today's%20Astronomy.png" alt="Today's Astronomy" width="800" />
+  <img src="https://github.com/ItaloRochaj/WeatherTrackerAPI/blob/main/docs/screenshots/Today%27sAstronomy.png" alt="Today's Astronomy" width="800" />
 </p>
 
 <p align="center">
-  <img src="docs/screenshots/events.png" alt="Celestial Events" width="800" />
+  <img src="https://github.com/ItaloRochaj/WeatherTrackerAPI/blob/main/docs/screenshots/CelestialEvents.png" alt="Celestial Events" width="800" />
 </p>
 
 <p align="center">
-  <img src="docs/screenshots/about.png" alt="About" width="800" />
+  <img src="https://github.com/ItaloRochaj/WeatherTrackerAPI/blob/main/docs/screenshots/About.png" alt="About" width="800" />
 </p>
 
-> Dica: coloque as imagens em `docs/screenshots/` com exatamente estes nomes: `home.png`, `today.png`, `events.png`, `about.png`.
+> As imagens acima estão versionadas em `docs/screenshots/` neste repositório e são referenciadas pelos links públicos indicados.
 
 ---
 
