@@ -5,8 +5,6 @@ Uma aplicação full‑stack para explorar dados astronômicos (APOD/NASA), clas
 - Backend: ASP.NET Core 8 (Web API) + EF Core (SQL Server)
 - Frontend: Angular 19 (SPA)
 
-> Inspirado no estilo do README do projeto Microserviços E‑commerce, este documento reúne visão geral, arquitetura, execução, endpoints, estrutura do projeto e links para documentação adicional.
-
 ---
 
 ## 📸 Preview
