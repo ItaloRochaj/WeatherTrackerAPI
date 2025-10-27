@@ -1,10 +1,11 @@
-# 🌌 AstronomyTracker — WeatherTrackerAPI + Angular Frontend
+# 🌌 AstronomyTracker
 
 Uma aplicação full‑stack para explorar dados astronômicos (APOD/NASA), classificar imagens, consultar tendências e gerenciar autenticação de usuários. Este repositório é um monorepo com:
 
 - Backend: ASP.NET Core 8 (Web API) + EF Core (SQL Server)
 - Frontend: Angular 19 (SPA)
 
+<<<<<<< HEAD
 > Inspirado no estilo do README do projeto Microserviços E‑commerce, este documento reúne visão geral, arquitetura, execução, endpoints, estrutura do projeto e links para documentação adicional.
 
 <p>
@@ -22,6 +23,8 @@ Uma aplicação full‑stack para explorar dados astronômicos (APOD/NASA), clas
   <a href="https://api.nasa.gov/"><img alt="NASA APOD" src="https://img.shields.io/badge/NASA-APOD-0B3D91?logo=nasa&logoColor=white" /></a>
 </p>
 
+=======
+>>>>>>> 6e6e5a78e70d6abe82857e99c959333c6e72ee98
 ---
 
 ## 📸 Preview
